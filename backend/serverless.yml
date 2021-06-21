@@ -145,7 +145,7 @@ resources:
           HttpVersion: http2
           DefaultRootObject: index.html
           Origins:
-            - DomainName: !GetAtt ImageBucket.DomainName
+            - DomainName: !GetAtt ImageBucket.RegionalDomainName
               Id: smp-s3-image-origin
               CustomOriginConfig:
                 HTTPPort: 80
@@ -172,7 +172,7 @@ resources:
           HttpVersion: http2
           DefaultRootObject: index.html
           Origins:
-            - DomainName: !GetAtt VideoBucket.DomainName
+            - DomainName: !GetAtt VideoBucket.RegionalDomainName
               Id: smp-s3-video-origin
               CustomOriginConfig:
                 HTTPPort: 80
