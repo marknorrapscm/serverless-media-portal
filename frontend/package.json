@@ -1,0 +1,54 @@
+{
+    "name": "serverless-media-portal-frontend",
+    "homepage": "/",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "local-server": "http-server build -p 5000"
+    },
+    "dependencies": {
+        "@testing-library/jest-dom": "^5.11.5",
+        "@testing-library/react": "^11.1.1",
+        "@testing-library/user-event": "^12.2.0",
+        "bcryptjs": "^2.4.3",
+        "bootstrap": "^4.6.0",
+        "history": "^5.0.0",
+        "react": "^17.0.2",
+        "react-bootstrap": "^1.6.0",
+        "react-dom": "^17.0.2",
+        "react-helmet": "^6.1.0",
+        "react-router-dom": "^5.2.0",
+        "react-scripts": "^4.0.3",
+        "react-toast-notifications": "^2.4.4",
+        "styled-components": "^5.3.0",
+        "web-vitals": "^0.2.4"
+    },
+    "devDependencies": {
+        "eslint": "^7.27.0",
+        "eslint-plugin-jsx-a11y": "^6.4.1",
+        "eslint-plugin-react": "^7.23.2",
+        "styled-components.macro": "^1.0.0"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
+}

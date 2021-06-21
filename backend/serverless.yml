@@ -1,0 +1,426 @@
+service: serverless-media-portal
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+frameworkVersion: "2"
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-scripts
+
+custom:
+  # These are the only variables you need to edit:
+  region: eu-west-1
+  stage: production
+  ffmpegLayerArn: add ARN for FFmpeg layer here
+  imageBucketName: fill after first deploy
+  videoBucketName: fill after first deploy
+  numberOfDaysToKeepLogsFor: 30 # Options: https://amzn.to/2NpZZIc
+  # ./custom variables
+  scripts:
+    hooks:
+       "deploy:finalize": serverless invoke -f runAfterDeploy
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ${self:custom.region}
+  stage: ${self:custom.stage}
+  logRetentionInDays: ${self:custom.numberOfDaysToKeepLogsFor}
+  apiGateway:
+    shouldStartNameWithService: true
+  environment:
+    # Define environment variables so we can access the information in our Lambdas (e.g. process.env.imageBucketName)
+    imageBucketName: ${self:custom.imageBucketName}
+    videoBucketName: ${self:custom.videoBucketName}
+    videoTableName: !Join [ "", [ "smp_Videos-", '${self:provider.stage}']]
+    userTableName: !Join [ "", [ "smp_Users-", '${self:provider.stage}']]
+    tagTableName: !Join [ "", [ "smp_Tags-", '${self:provider.stage}']]
+    stage: ${self:provider.stage}
+    region: ${self:provider.region}
+    apiGatewayUrl: !Join [ "", [ "https://", !Ref ApiGatewayRestApi, ".execute-api.", '${self:provider.region}', ".amazonaws.com/", '${self:provider.stage}', "/" ]]
+    generatedImageBucketName: !Ref ImageBucket 
+    generatedVideoBucketName: !Ref VideoBucket
+    imageCloudfrontDomain: !GetAtt ImageCloudfrontDistribution.DomainName
+    videoCloudfrontDomain: !GetAtt VideoCloudfrontDistribution.DomainName
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+       - dynamodb:Query
+       - dynamodb:Scan
+       - dynamodb:GetItem
+       - dynamodb:PutItem
+       - dynamodb:UpdateItem
+       - dynamodb:DeleteItem
+      Resource: 
+        - !GetAtt VideoTable.Arn
+        - !GetAtt UserTable.Arn
+        - !GetAtt TagTable.Arn
+    - Effect: "Allow"
+      Action:
+       - s3:GetObject
+       - s3:PutObject
+       - s3:PutObjectAcl
+      Resource: 
+        - Fn::Join: [ "", [ !GetAtt ImageBucket.Arn, "/*" ]]
+        - Fn::Join: [ "", [ !GetAtt VideoBucket.Arn, "/*" ]]
+
+resources:
+  Resources:
+    ImageBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        CorsConfiguration:
+          CorsRules:
+            - AllowedMethods:
+                - GET
+                - POST
+                - PUT
+                - HEAD
+              AllowedOrigins:
+                - "*"
+              AllowedHeaders:
+                - "*"
+    VideoBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        CorsConfiguration:
+          CorsRules:
+            - AllowedMethods:
+                - GET
+                - POST
+                - PUT
+                - HEAD
+              AllowedOrigins:
+                - "*"
+              AllowedHeaders:
+                - "*"
+    VideoTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.videoTableName}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          -
+            AttributeName: VideoHash
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: VideoHash
+            KeyType: HASH
+    UserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.userTableName}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          -
+            AttributeName: UserHash
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: UserHash
+            KeyType: HASH
+    TagTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.tagTableName}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          -
+            AttributeName: TagName
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: TagName
+            KeyType: HASH
+    ImageCloudfrontDistribution:
+      Type: "AWS::CloudFront::Distribution"
+      Properties:
+        DistributionConfig:
+          ViewerCertificate:
+            CloudFrontDefaultCertificate: true
+          Enabled: true
+          HttpVersion: http2
+          DefaultRootObject: index.html
+          Origins:
+            - DomainName: !GetAtt ImageBucket.DomainName
+              Id: smp-s3-image-origin
+              CustomOriginConfig:
+                HTTPPort: 80
+                HTTPSPort: 443
+                OriginProtocolPolicy: https-only
+          DefaultCacheBehavior:
+            ViewerProtocolPolicy: allow-all
+            TargetOriginId: smp-s3-image-origin
+            AllowedMethods:
+              - GET
+              - HEAD
+            Compress: true
+            DefaultTTL: 30
+            MinTTL: 10
+            ForwardedValues:
+              QueryString: true
+    VideoCloudfrontDistribution:
+      Type: "AWS::CloudFront::Distribution"
+      Properties:
+        DistributionConfig:
+          ViewerCertificate:
+            CloudFrontDefaultCertificate: true
+          Enabled: true
+          HttpVersion: http2
+          DefaultRootObject: index.html
+          Origins:
+            - DomainName: !GetAtt VideoBucket.DomainName
+              Id: smp-s3-video-origin
+              CustomOriginConfig:
+                HTTPPort: 80
+                HTTPSPort: 443
+                OriginProtocolPolicy: https-only
+          DefaultCacheBehavior:
+            ViewerProtocolPolicy: allow-all
+            TargetOriginId: smp-s3-video-origin
+            AllowedMethods:
+              - GET
+              - HEAD
+            Compress: true
+            DefaultTTL: 30
+            MinTTL: 10
+            ForwardedValues:
+              QueryString: true
+
+functions:
+  runAfterDeploy:
+    handler: src/handlers/tasks.runAfterDeploy
+    events:
+      - http:
+          path: /runAfterDeploy
+          method: get
+          cors: true
+  handshake:
+    handler: src/handlers/read.handshake
+    description: Perform an authenticated handshake
+    events:
+      - http:
+          path: /handshake
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  listVideos:
+    handler: src/handlers/read.listVideos
+    description: Get a list of videos for the logged in user
+    events:
+      - http:
+          path: /listVideos
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  getVideo:
+    handler: src/handlers/read.getVideo
+    description: Get a single video based on a hash supplied by the caller
+    events:
+      - http:
+          path: /getVideo
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  listRandomVideos:
+    handler: src/handlers/read.listRandomVideos
+    description: Get a random list of videos
+    events:
+      - http:
+          path: /listRandomVideos
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  getTagsForUser:
+    handler: src/handlers/read.getTagsForUser
+    description: Get the tags available to the logged in user
+    events:
+      - http:
+          path: /getTagsForUser
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  getAllTags:
+    handler: src/handlers/read.getAllTags
+    description: Get all tags from the smp_Tags table
+    events:
+      - http:
+          path: /getAllTags
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  addTag:
+    handler: src/handlers/write.addTag
+    description: Adds a tag to the smp_Tags table
+    events:
+      - http:
+          path: /addTag
+          method: post
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  deleteTag:
+    handler: src/handlers/write.deleteTag
+    description: Deletes a tag to the smp_Tags table
+    events:
+      - http:
+          path: /deleteTag
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  getPresignedUrlForVideoUpload:
+    handler: src/handlers/upload.getPresignedUrlForVideoUpload
+    description: Generates a pre-signed URL allowing upload of .mp4 files to S3.
+    events:
+      - http:
+          path: /getPresignedUrlForVideoUpload
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  submitForm:
+    handler: src/handlers/upload.submitForm
+    description: Handle video upload form submission
+    events:
+      - http:
+          path: /submitForm
+          method: post
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  listUsers:
+    handler: src/handlers/manageusers.listUsers
+    description: Gets a list of all users
+    events:
+      - http:
+          path: /listUsers
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  updateUser:
+    handler: src/handlers/manageusers.updateUser
+    description: Update a user
+    events:
+      - http:
+          path: /updateUser
+          method: post
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  addUser:
+    handler: src/handlers/manageusers.addUser
+    description: Adds a new user
+    events:
+      - http:
+          path: /addUser
+          method: post
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  deleteUser:
+    handler: src/handlers/manageusers.deleteUser
+    description: Deletes a user
+    events:
+      - http:
+          path: /deleteUser
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  addViewToVideo:
+    handler: src/handlers/write.addViewToVideo
+    description: Adds one view to the specified video hash
+    events:
+      - http:
+          path: /addViewToVideo
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  addCommentToVideo:
+    handler: src/handlers/write.addCommentToVideo
+    description: Adds a comment to a video
+    events:
+      - http:
+          path: /addCommentToVideo
+          method: post
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  getCommentsForVideo:
+    handler: src/handlers/read.getCommentsForVideo
+    description: Get the comments for a specified video
+    events:
+      - http:
+          path: /getCommentsForVideo
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  editVideo:
+    handler: src/handlers/write.editVideo
+    description: Save edits to video
+    events:
+      - http:
+          path: /editVideo
+          method: post
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  deleteVideo:
+    handler: src/handlers/write.deleteVideo
+    description: Deletes a specified video
+    events:
+      - http:
+          path: /deleteVideo
+          method: get
+          cors: true
+          authorizer:
+            name: authorizer
+            resultTtlInSeconds: 0
+  thumbnailMaker:
+    handler: src/handlers/upload.thumbnailMaker
+    memorySize: 5120
+    timeout: 60
+    maximumEventAge: 60
+    maximumRetryAttempts: 0
+    events:
+      - s3:
+          bucket: !Ref VideoBucket
+          event: s3:ObjectCreated:*
+          rules:
+            - suffix: .mp4
+          existing: true
+    layers:
+      - ${self:custom.ffmpegLayerArn}
+  authorizer:
+    handler: src/handlers/authorization.authorize

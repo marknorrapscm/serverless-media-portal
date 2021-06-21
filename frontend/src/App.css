@@ -1,0 +1,14 @@
+/* Add vertical spacing between Bootstrap cols when stacked */
+/* [class*="col-"]:not(:last-child) { */
+/* [class*="col-"] {
+    padding-top: 1em;
+    padding-right: 1em;
+} */
+
+.form-row {
+    margin-top: 1em;
+}
+
+.form-row:first-of-type {
+    margin-top: 0;
+}

@@ -1,0 +1,119 @@
+/*!
+ * Start Bootstrap - Simple Sidebar (https://startbootstrap.com/template/simple-sidebar)
+ * Copyright 2013-2020 Start Bootstrap
+ * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-simple-sidebar/blob/master/LICENSE)
+ *
+ * Modified to make it work properly.
+ */
+#wrapper {
+    overflow-x: hidden;
+}
+
+#sidebar-wrapper {
+    min-width: 16.5em;
+    max-width: 16.5em;
+    margin-left: -16.5em;
+    min-height: 100vh;
+    -webkit-transition: margin 0.15s ease-out;
+    -moz-transition: margin 0.15s ease-out;
+    -o-transition: margin 0.15s ease-out;
+    transition: margin 0.15s ease-out;
+}
+
+#sidebar-wrapper .sidebar-heading {
+    font-family: Nunito, Roboto, sans-serif;
+    font-size: 1.15em;
+    font-weight: bold;
+    color: #fff;
+    background: #333;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#sidebar-wrapper .sidebar-heading img {
+    width: 2.2em;
+    margin-right: 0.1em;
+    margin-left: -1em;
+}
+
+#sidebar-wrapper .list-group {
+    width: 100%;
+}
+
+/* Main content wrapper */
+#page-content-wrapper {
+    min-width: 100vw;
+    background-color: #f7f9fc;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+}
+
+/* Left menu links */
+.list-group {
+    font-family: Nunito, Roboto, sans-serif;
+    padding-top: 12px;
+}
+
+.list-group-item:first-of-type {
+    border-width: 1px 0 1px;
+}
+
+.list-group-item:last-of-type {
+    border-width: 0px 0 1px !important;
+}
+
+/* Nav buttons */
+.home-btn,
+.back-btn {
+    padding: 4px 8px 3px 8px;
+    margin-right: 6px;
+}
+
+.home-btn > svg {
+    fill: #FFFFFF;
+    height: 28px;
+}
+
+.back-btn > svg {
+    fill: #FFFFFF;
+    height: 26px;
+    width: 23px;
+}
+
+.menu-toggle-btn {
+    padding: 5px 8px 5.5px;
+}
+
+.navbar-toggler {
+    margin-left: auto;
+}
+
+/* 
+   Set the width in which the sidebar appears at just above the standard tablet
+   portrait view (768px wide) so that holding an iPad in portrait mode does not 
+   show it
+*/
+@media (min-width: 769px) {
+    #sidebar-wrapper {
+        margin-left: 0;
+    }
+
+    #page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: -16.5em;
+    }
+}
+
+@media (max-width: 767px) {
+    .nav-item {
+        margin-left: 3em;
+    }
+}

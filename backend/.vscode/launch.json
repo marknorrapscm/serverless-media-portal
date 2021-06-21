@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Serverless debug",
+            "program": "${workspaceRoot}/node_modules/serverless/bin/serverless",
+            "args": [
+                "invoke",
+                "local",
+                "-f",
+                "authorizer",
+                "--data",
+                "$2a$10$yGsdhh0HUIWMoECia9IcLewWvLrfhTEiLVD4AGhMrkhZkLYVMlkz2",
+                "-e",
+                "NODE_ENV=dev"
+            ]
+        }
+    ]
+}

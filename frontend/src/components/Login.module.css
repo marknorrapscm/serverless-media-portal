@@ -1,0 +1,9 @@
+.login-card {
+	box-shadow: 3px 3px 12px 0px #e6e6e6;
+	width: 290px !important;
+}
+
+.label {
+	font-size: 0.95em;
+	color: #b2b2b2;
+}
