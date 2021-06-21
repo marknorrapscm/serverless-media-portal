@@ -1,4 +1,4 @@
-<div style="text-align:center">
+<div align="center" style="text-align:center">
   <img src="https://i.imgur.com/iwJYyux.png" />
   <h1>Serverless Media Portal</h1>
 </div>
