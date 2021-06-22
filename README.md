@@ -412,6 +412,16 @@ Then there's [Cloudfront](https://aws.amazon.com/cloudfront/pricing/), which cha
 
 In hindsight, Cloudfront and S3 are fairly pricey for the benefits they deliver to a project of this scale. An alternative storage provider may have worked out cheaper, but from my personal use I still have not been charged anything despite uploading ~100 videos and having several family members use the website. Your mileage may vary and I encourage you to check the AWS pricing pages.
 
+### Why do we deploy the backend twice?
+
+<a name="why-deploy-twice"></a>
+
+If we want to run the project offline (using `npm run offline`) then we need our environment variables to have access to the bucket names so that they can generate pre-signed URLs for upload. The `!GetAtt` and `!Ref` commands do not work when running offline, so we need the names of the buckets to be added manually. 
+
+Having the names of the buckets print to console after deploy (the `!GetAtt` *does* work just after a deploy, seemingly), then getting the user to add those bucket names as custom variables and *then* calling those custom variables as *environment* variables is convoluted, but for the end user it's only one step (copying the names into the custom variables section of the template), so it is relatively painless.
+
+It's an extra inconvenience, but it makes life easier for continued development.
+
 ### Stages and running offline
 
 You will notice that the stage is hardcoded to `production` in the `serverless.yml` file. Normally, we'd use the `${opt:stage}` setting in Serverless that would use whatever stage is supplied as a parameter (e.g. `serverless deploy --stage dev`). However, there is a bug that means that the `runAfterDeploy` task that creates the temporary user and prints out the asset URLs does *not* pick up the stage whenever it is supplied as a parameter. It simply reads `undefined` no matter what you supply to it.
