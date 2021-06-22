@@ -143,7 +143,7 @@ Open the `serverless.yml` file and, on line #13, set the region you want to depl
 
 Open a terminal inside the `/backend` folder. Before we do anything, run:
 
-> `npm run install`
+> `npm install`
 
 ...then, to deploy, simply run:
 
