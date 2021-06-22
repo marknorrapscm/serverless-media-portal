@@ -55,7 +55,7 @@ This project is meant for sharing small videos; the maximum video size is 512MB 
 
 ##  💻 1. Setup dev environment
 
-The setup is quick and easy. We need to do three things: install [Serverless Framework](https://www.serverless.com/), create an IAM user for it to use and clone the project from the [Github repo](LINK HERE).
+The setup is quick and easy. We need to do three things: install [Serverless Framework](https://www.serverless.com/), create an IAM user for it to use and clone the project from the [Github repo](https://github.com/marknorrapscm/serverless-media-portal.git).
 
 ### 1.1 Install Serverless Framework
 
@@ -100,7 +100,7 @@ With the Serverless Framework CLI setup, we can proceed with cloning the Serverl
 
 I prefer to use [Fork](https://git-fork.com/) as my Git client, but the command line command is:
 
-> `git clone https://linktogithub serverless-media-portal`
+> `git clone https://github.com/marknorrapscm/serverless-media-portal.git`
 
 This will pull down the project, which is a mono-repo containing both the frontend and the backend.
 
