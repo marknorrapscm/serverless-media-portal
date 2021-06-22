@@ -141,7 +141,11 @@ Copy the ARN (partially blurred out in the photo above) and paste it into line #
 
 Open the `serverless.yml` file and, on line #13, set the region you want to deploy to. I have it set to `eu-west-1`.
 
-Then, with a terminal inside the `/backend` folder, simply run:
+Open a terminal inside the `/backend` folder. Before we do anything, run:
+
+> `npm run install`
+
+...then, to deploy, simply run:
 
 > `npm run deploy`
 
@@ -200,7 +204,11 @@ Once the deploy is complete, we should now have a fully working home media porta
 
 ## ⭐ 3. Build and deploy the frontend
 
-To run the frontend, navigate into the `/frontend` directory and run:
+If you haven't already, navigate to the `/frontend` directory and run:
+
+> `npm install`
+
+Once that completes, run the frontend using:
 
 > `npm run start`
 
