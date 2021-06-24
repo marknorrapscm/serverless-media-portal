@@ -257,7 +257,7 @@ This gives us a very basic upload page. Click "Browse" to select your video:
 
 ![https://i.imgur.com/LacFsLL.png](https://i.imgur.com/LacFsLL.png)
 
-When the `.mp4` is selected, the upload will begin automatically. Remember you are limited to files <= 512MB in size. Once the video is selected it automatically begins uploaded; once the upload is complete, three thumbnails will be generated for you to choose from. I [discuss this later](#thumbnail-sizes), but currently the thumbnails are a set width and height regardless of the video – that width and height is tailored to videos shot in portrait mode.
+When the `.mp4` is selected, the upload will begin automatically. Remember you are limited to files <= 512MB in size. Once the video is selected it automatically begins uploaded; once the upload is complete, three thumbnails will be generated for you to choose from. The thumbnails are 140px in height and however wide they need to be to preserve the aspect ratio.
 
 ---
 
@@ -387,13 +387,6 @@ A strong hashing algorithm (bcrypt) is then applied to this string and a hash is
 The hash is stored in local storage. There is endless debate online about storing information in local storage and it *does* seem to be inferior to using a secure cookie (I may change this in future). The frontend *is* pretty secure from XSS attacks though: React has built-in character escaping and no obscure packages are being used.
 
 Auth systems are a deep dive and I am no expert, nor am I suggesting that this approach is suitable for large systems, but for a system of this scale it is viable.
-
-
-### A note on thumbnail sizes
-
-<a name="thumbnail-sizes"></a>
-
-The thumbnails generated are always 80px wide and 140px tall; this works best for videos shot in portrait. This is an area of the app that can and should be improved as doing something that handles landscape videos better seems very achievable. These dimensions are currently hardcoded on line `#65` in `/backend/src/lib/thumbnail-generation/generate-thumbnails-from-video.js`. The `scale` property in FFmpeg has various settings that can be tweaked so as to handle landscape videos better. You can modify the dimensions specified on that line of code to suit your needs if you wish; better yet, get it to handle landscape videos and submit a pull request.
 
 ### AWS costs
 
