@@ -187,16 +187,9 @@ With the environment variables updated in the backend, we need to do a final dep
 
 > `npm run deploy`
 
-This deploy should be much quicker since the assets are already setup.
+This deploy should be much quicker since the Cloudfront distributions are already setup.
 
-#### Why do we have to deploy twice?
-
-<a name="#why-deploy-twice"></a>
-
-We need to be able to reference the names of the S3 buckets as environment variables in our backend code. We *can* do this in Serverless but it doesn't work when running in offline mode, so this trick lets us get around that.
-
-Once the deploy is complete, we should now have a fully working home media portal running in AWS. We can point whatever frontend we like at it, not just the one I’ve built here.
-
+If you're curious as to why we had to deploy the backend twice I explain the motivations [here](#why-deploy-twice). However, that isn't important for most users. What matters is that we now have the backend of our home media portal running in AWS. We can point whatever frontend we like at it.
 
 ---
 
