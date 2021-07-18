@@ -1,4 +1,4 @@
-const getTagsAvailableToUser = require("./get-tags-available-to-user");
+const getTagsAvailableToUser = require("../application/get-tags-available-to-user");
 
 module.exports = async (video, authorizationToken) => {
 	const tagsAvailableToUser = await getTagsAvailableToUser(authorizationToken);

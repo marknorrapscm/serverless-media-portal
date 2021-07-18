@@ -1,6 +1,6 @@
 const ResponseFactory = require("../lib/factories/ResponseFactory");
 const getAuthToken = require("../utility/get-auth-token");
-const getUploadUrl = require("../lib/get-upload-url");
+const getUploadUrl = require("../application/get-upload-url");
 const isUserAnAdmin = require("../lib/is-user-an-admin");
 const makeThumbnail = require("../lib/thumbnail-generation/make-thumbnail");
 const writeVideoToDynamo = require("../lib/write-video-to-dynamo");

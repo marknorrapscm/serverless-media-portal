@@ -1,6 +1,6 @@
 const DynamoFactory = require("./factories/DynamoFactory");
 const extractItemsFromDynamoResults = require("./extract-items-from-dynamo-results");
-const getTagsAvailableToUser = require("./get-tags-available-to-user");
+const getTagsAvailableToUser = require("../application/get-tags-available-to-user");
 
 module.exports = async userHash => {
 	const videos = await getVideos(userHash);

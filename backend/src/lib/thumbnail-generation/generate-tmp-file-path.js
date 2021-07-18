@@ -1,4 +1,4 @@
-const getRandomString = require("../get-random-string");
+const getRandomString = require("../../utility/get-random-string");
 
 /**
  * Takes a string in the format of "xyz-{HASH}" and replaces the
