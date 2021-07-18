@@ -1,5 +1,5 @@
 const ResponseFactory = require("../lib/factories/ResponseFactory");
-const getAuthToken = require("../lib/get-auth-token");
+const getAuthToken = require("../utility/get-auth-token");
 const getUploadUrl = require("../lib/get-upload-url");
 const isUserAnAdmin = require("../lib/is-user-an-admin");
 const makeThumbnail = require("../lib/thumbnail-generation/make-thumbnail");

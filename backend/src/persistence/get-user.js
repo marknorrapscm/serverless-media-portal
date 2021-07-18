@@ -1,5 +1,5 @@
-const extractItemsFromDynamoResults = require("./extract-items-from-dynamo-results");
-const DynamoFactory = require("./factories/DynamoFactory");
+const extractItemsFromDynamoResults = require("../lib/extract-items-from-dynamo-results");
+const DynamoFactory = require("../lib/factories/DynamoFactory");
 
 module.exports = async userHash => {
 	const dynamo = DynamoFactory.getSdk();

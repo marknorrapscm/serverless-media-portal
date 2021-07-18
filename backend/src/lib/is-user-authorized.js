@@ -1,5 +1,5 @@
-const getAuthToken = require("./get-auth-token");
-const getUser = require("./get-user");
+const getAuthToken = require("../utility/get-auth-token");
+const getUser = require("../persistence/get-user");
 
 module.exports = async event => {
 	const result = {

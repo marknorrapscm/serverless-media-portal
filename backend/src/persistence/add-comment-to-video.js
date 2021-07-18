@@ -1,25 +1,6 @@
-const DynamoFactory = require("./factories/DynamoFactory");
-const getRandomString = require("./get-random-string");
-const getUser = require("./get-user");
+const DynamoFactory = require("../lib/factories/DynamoFactory");
 
-module.exports = async (videoHash, commentText, userHash) => {
-	if (!videoHash || !commentText || !userHash) {
-		throw Error("commentText, videoHash or userHash not supplied");
-	}
-
-	const user = await getUser(userHash);
-	const commentHash = getRandomString(11);
-	const res = await addCommentToVideo(
-		videoHash,
-		commentHash,
-		commentText,
-		user.DisplayName
-	);
-
-	return res;
-};
-
-const addCommentToVideo = async (videoHash, commentHash, commentText, userDisplayName) => {
+module.exports = async (videoHash, commentHash, commentText, userDisplayName) => {
 	let success;
 	let message;
 

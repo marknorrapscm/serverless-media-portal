@@ -1,6 +1,6 @@
 const getVideosForUser = require("../lib/get-videos-for-user");
 const getVideo = require("../lib/get-video");
-const getAuthToken = require("../lib/get-auth-token");
+const getAuthToken = require("../utility/get-auth-token");
 const getTagsAvailableToUser = require("../lib/get-tags-available-to-user");
 const getEverythingInTable = require("../lib/get-everything-in-table");
 const ResponseFactory = require("../lib/factories/ResponseFactory");
@@ -67,6 +67,7 @@ module.exports.getAllTags = async event => {
 module.exports.getCommentsForVideo = async event => {
 	const videoHash = event.queryStringParameters.videoHash;
 	const authorizationToken = getAuthToken(event);
+	console.log("WORKINNG\n\n\n");
 	const comments = await getCommentsForVideo(videoHash, authorizationToken);
 
 	if (comments) {
