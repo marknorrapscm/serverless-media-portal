@@ -1,5 +1,5 @@
-const getVideo = require("./get-video");
-const isUserAuthorizedToViewVideo = require("./is-user-authorized-to-view-video");
+const getVideo = require("../persistence/get-video");
+const isUserAuthorizedToViewVideo = require("../lib/is-user-authorized-to-view-video");
 
 module.exports = async (videoHash, authorizationToken) => {
 	try {

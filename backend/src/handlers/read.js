@@ -1,10 +1,10 @@
 const getVideosForUser = require("../lib/get-videos-for-user");
-const getVideo = require("../lib/get-video");
+const getVideo = require("../persistence/get-video");
 const getAuthToken = require("../utility/get-auth-token");
 const getTagsAvailableToUser = require("../lib/get-tags-available-to-user");
 const getEverythingInTable = require("../lib/get-everything-in-table");
 const ResponseFactory = require("../lib/factories/ResponseFactory");
-const getCommentsForVideo = require("../lib/get-comments-for-video");
+const getCommentsForVideo = require("../application/get-comments-for-video");
 const isUserAnAdmin = require("../lib/is-user-an-admin");
 const isUserAuthorizedToViewVideo = require("../lib/is-user-authorized-to-view-video");
 

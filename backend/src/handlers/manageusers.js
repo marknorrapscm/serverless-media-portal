@@ -1,7 +1,7 @@
 const ResponseFactory = require("../lib/factories/ResponseFactory");
-const getListOfUsers = require("../lib/get-list-of-users");
-const updateUser = require("../lib/update-user");
-const deleteUser = require("../lib/delete-user");
+const getListOfUsers = require("../persistence/get-list-of-users");
+const updateUser = require("../persistence/update-user");
+const deleteUser = require("../persistence/delete-user");
 
 module.exports.listUsers = async event => {
 	const users = await getListOfUsers();

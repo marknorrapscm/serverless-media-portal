@@ -1,4 +1,4 @@
-const DynamoFactory = require("./factories/DynamoFactory");
+const DynamoFactory = require("../lib/factories/DynamoFactory");
 
 module.exports = async userHash => {
 	let success;

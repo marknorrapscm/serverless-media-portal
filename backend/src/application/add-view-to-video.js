@@ -1,4 +1,4 @@
-const getVideo = require("../lib/get-video");
+const getVideo = require("../persistence/get-video");
 const updateVideo = require("../persistence/update-video");
 
 module.exports = async videoHash => {
