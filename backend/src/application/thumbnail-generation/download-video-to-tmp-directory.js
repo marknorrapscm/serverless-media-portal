@@ -1,5 +1,5 @@
 const fs = require("fs");
-const S3Factory = require("../factories/S3Factory");
+const S3Factory = require("../../utility/factories/S3Factory");
 const generateTmpFilePath = require("./generate-tmp-file-path");
 
 module.exports = async (triggerBucketName, videoFileName) => {

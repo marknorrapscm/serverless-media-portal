@@ -3,9 +3,9 @@ const addTag = require("../persistence/add-tag");
 const addViewToVideo = require("../application/add-view-to-video");
 const deleteTag = require("../persistence/delete-tag");
 const deleteVideo = require("../persistence/delete-video");
-const ResponseFactory = require("../lib/factories/ResponseFactory");
+const ResponseFactory = require("../utility/factories/ResponseFactory");
 const getAuthToken = require("../utility/get-auth-token");
-const isUserAnAdmin = require("../lib/is-user-an-admin");
+const isUserAnAdmin = require("../application/is-user-an-admin");
 const updateVideo = require("../persistence/update-video");
 
 module.exports.addViewToVideo = async event => {

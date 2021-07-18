@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 const fs = require("fs");
-const { spawnSync, exec } = require("child_process");
-const S3Factory = require("../factories/S3Factory");
+const { spawnSync } = require("child_process");
+const S3Factory = require("../../utility/factories/S3Factory");
 const doesFileExist = require("./does-file-exist");
 const generateTmpFilePath = require("./generate-tmp-file-path");
 

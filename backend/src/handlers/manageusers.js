@@ -1,4 +1,4 @@
-const ResponseFactory = require("../lib/factories/ResponseFactory");
+const ResponseFactory = require("../utility/factories/ResponseFactory");
 const getListOfUsers = require("../persistence/get-list-of-users");
 const updateUser = require("../persistence/update-user");
 const deleteUser = require("../persistence/delete-user");

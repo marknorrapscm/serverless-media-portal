@@ -1,12 +1,12 @@
-const getVideosForUser = require("../lib/get-videos-for-user");
+const getVideosForUser = require("../application/get-videos-for-user");
 const getVideo = require("../persistence/get-video");
 const getAuthToken = require("../utility/get-auth-token");
 const getTagsAvailableToUser = require("../application/get-tags-available-to-user");
 const getEverythingInTable = require("../persistence/get-everything-in-table");
-const ResponseFactory = require("../lib/factories/ResponseFactory");
+const ResponseFactory = require("../utility/factories/ResponseFactory");
 const getCommentsForVideo = require("../application/get-comments-for-video");
-const isUserAnAdmin = require("../lib/is-user-an-admin");
-const isUserAuthorizedToViewVideo = require("../lib/is-user-authorized-to-view-video");
+const isUserAnAdmin = require("../application/is-user-an-admin");
+const isUserAuthorizedToViewVideo = require("../application/is-user-authorized-to-view-video");
 
 module.exports.handshake = async () => {
 	return ResponseFactory.getSuccessResponse({ message: "Success" });

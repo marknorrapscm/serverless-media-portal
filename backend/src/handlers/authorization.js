@@ -1,7 +1,7 @@
-const isUserAuthorized = require("../lib/is-user-authorized");
+const validateAuthToken = require("../application/validate-auth-token");
 
 module.exports.authorize = async (event, context, callback) => {
-	const authorizeResult = await isUserAuthorized(event);
+	const authorizeResult = await validateAuthToken(event);
 
 	if (authorizeResult.success) {
 		return {

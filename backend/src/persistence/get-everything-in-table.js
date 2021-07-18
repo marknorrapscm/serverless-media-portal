@@ -1,5 +1,5 @@
-const DynamoFactory = require("../lib/factories/DynamoFactory");
-const extractItemsFromDynamoResults = require("../lib/extract-items-from-dynamo-results");
+const DynamoFactory = require("../utility/factories/DynamoFactory");
+const extractItemsFromDynamoResults = require("../utility/extract-items-from-dynamo-results");
 
 module.exports = async tableName => {
 	const items = await loadEverythingFromTable(tableName);

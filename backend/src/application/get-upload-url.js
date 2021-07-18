@@ -1,4 +1,4 @@
-const S3Factory = require("../lib/factories/S3Factory");
+const S3Factory = require("../utility/factories/S3Factory");
 
 module.exports = async (fileName, bucketName) => {
 	try {

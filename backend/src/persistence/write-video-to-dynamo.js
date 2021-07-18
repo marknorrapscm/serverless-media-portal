@@ -1,4 +1,4 @@
-const DynamoFactory = require("./factories/DynamoFactory");
+const DynamoFactory = require("../utility/factories/DynamoFactory");
 const getRandomString = require("../utility/get-random-string");
 
 module.exports = async params => {

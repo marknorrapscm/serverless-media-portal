@@ -1,9 +1,9 @@
-const ResponseFactory = require("../lib/factories/ResponseFactory");
+const ResponseFactory = require("../utility/factories/ResponseFactory");
 const getAuthToken = require("../utility/get-auth-token");
 const getUploadUrl = require("../application/get-upload-url");
-const isUserAnAdmin = require("../lib/is-user-an-admin");
-const makeThumbnail = require("../lib/thumbnail-generation/make-thumbnail");
-const writeVideoToDynamo = require("../lib/write-video-to-dynamo");
+const isUserAnAdmin = require("../application/is-user-an-admin");
+const makeThumbnail = require("../application/thumbnail-generation/make-thumbnail");
+const writeVideoToDynamo = require("../persistence/write-video-to-dynamo");
 
 module.exports.getPresignedUrlForVideoUpload = async event => {
 	try {

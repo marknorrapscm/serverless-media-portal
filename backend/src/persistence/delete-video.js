@@ -1,4 +1,4 @@
-const DynamoFactory = require("../lib/factories/DynamoFactory");
+const DynamoFactory = require("../utility/factories/DynamoFactory");
 
 module.exports = async videoHash => {
 	let success;
