@@ -1,6 +1,7 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 const fs = require("fs");
-const { spawnSync, exec } = require("child_process");
+const { spawnSync } = require("child_process");
 const S3Factory = require("../factories/S3Factory");
 const doesFileExist = require("./does-file-exist");
 const generateTmpFilePath = require("./generate-tmp-file-path");
@@ -8,19 +9,48 @@ const generateTmpFilePath = require("./generate-tmp-file-path");
 const ffprobePath = "/opt/bin/ffprobe";
 const ffmpegPath = "/opt/bin/ffmpeg";
 
-module.exports = async (tmpVideoPath, numberOfThumbnailsToCreate, videoFileName) => {
-	const durationInSeconds = getVideoDuration(tmpVideoPath);
-	const randomTimes = generateRandomTimes(durationInSeconds, numberOfThumbnailsToCreate);
+module.exports = async (tmpVideoPath, numberOfThumbnails, videoFileName) => {
+	const randomTimes = generateRandomTimes(tmpVideoPath, numberOfThumbnails);
 
-	for (let i = 0; i < randomTimes.length; i += 1) {
-		const time = randomTimes[i];
-		const nameOfImageToCreate = generateNameOfImageToUpload(videoFileName, i);
-		const tmpThumbnailPath = createImageInTmpDirectory(tmpVideoPath, time);
+	for (const [index, randomTime] of Object.entries(randomTimes)) {
+		const tmpThumbnailPath = await createImageFromVideo(tmpVideoPath, randomTime);
 
 		if (doesFileExist(tmpThumbnailPath)) {
+			const nameOfImageToCreate = generateNameOfImageToUpload(videoFileName, index);
 			await uploadFileToS3(tmpThumbnailPath, nameOfImageToCreate);
 		}
 	}
+};
+
+const generateRandomTimes = (tmpVideoPath, numberOfTimesToGenerate) => {
+	const timesInSeconds = [];
+	const videoDuration = getVideoDuration(tmpVideoPath);
+
+	for (let x = 0; x < numberOfTimesToGenerate; x += 1) {
+		const randomNum = getRandomNumberNotInExistingList(timesInSeconds, videoDuration);
+
+		if (randomNum >= 0) {
+			timesInSeconds.push(randomNum);
+		}
+	}
+
+	return timesInSeconds;
+};
+
+const getRandomNumberNotInExistingList = (existingList, maxValueOfNumber) => {
+	for (let attemptNumber = 0; attemptNumber < 3; attemptNumber += 1) {
+		const randomNum = getRandomNumber(maxValueOfNumber);
+
+		if (!existingList.includes(randomNum)) {
+			return randomNum;
+		}
+	}
+
+	return -1;
+};
+
+const getRandomNumber = upperLimit => {
+	return Math.floor(Math.random() * upperLimit);
 };
 
 const getVideoDuration = tmpVideoPath => {
@@ -37,35 +67,10 @@ const getVideoDuration = tmpVideoPath => {
 	return Math.floor(ffprobe.stdout.toString());
 };
 
-const generateRandomTimes = (videoDuration, numberOfTimesToGenerate) => {
-	const timesInSeconds = [];
-
-	const getRandomNumber = () => {
-		return Math.floor(Math.random() * videoDuration);
-	};
-
-	for (let x = 0; x < numberOfTimesToGenerate; x += 1) {
-		for (let attemptNumber = 0; attemptNumber < 3; attemptNumber += 1) {
-			const randomNum = getRandomNumber();
-			if (!timesInSeconds.includes(randomNum)) {
-				timesInSeconds.push(randomNum);
-				break;
-			}
-		}
-	}
-
-	return timesInSeconds;
-};
-
-const createImageInTmpDirectory = (tmpVideoPath, targetSecond) => {
+const createImageFromVideo = (tmpVideoPath, targetSecond) => {
 	const tmpThumbnailPath = generateThumbnailPath(targetSecond);
-	spawnSync(ffmpegPath, [
-		"-ss", targetSecond,
-		"-i", tmpVideoPath,
-		"-vf", "thumbnail,scale=-1:140", // preserve aspect ratio whilst forcing the height to be 140px
-		"-vframes", 1,
-		tmpThumbnailPath
-	]);
+	const ffmpegParams = createFfmpegParams(tmpVideoPath, tmpThumbnailPath, targetSecond);
+	spawnSync(ffmpegPath, ffmpegParams);
 
 	return tmpThumbnailPath;
 };
@@ -76,6 +81,16 @@ const generateThumbnailPath = targetSecond => {
 	const thumbnailPathWithNumber = uniqueThumbnailPath.replace("{num}", targetSecond);
 
 	return thumbnailPathWithNumber;
+};
+
+const createFfmpegParams = (tmpVideoPath, tmpThumbnailPath, targetSecond) => {
+	return [
+		"-ss", targetSecond,
+		"-i", tmpVideoPath,
+		"-vf", "thumbnail,scale=80:140",
+		"-vframes", 1,
+		tmpThumbnailPath
+	];
 };
 
 const generateNameOfImageToUpload = (videoFileName, i) => {
