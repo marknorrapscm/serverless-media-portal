@@ -87,7 +87,7 @@ const createFfmpegParams = (tmpVideoPath, tmpThumbnailPath, targetSecond) => {
 	return [
 		"-ss", targetSecond,
 		"-i", tmpVideoPath,
-		"-vf", "thumbnail,scale=80:140",
+		"-vf", "thumbnail,scale=-1:140", // preserve aspect ratio whilst forcing the height to be 140px
 		"-vframes", 1,
 		tmpThumbnailPath
 	];
