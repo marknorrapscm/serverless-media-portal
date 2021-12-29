@@ -31,7 +31,7 @@ export function CommentPane({ videoHash }) {
 	const [isLoading, setIsLoading] = useState(true);
 	const [commentList, setCommentList] = useState([]);
 
-	useEffect(() => {
+	useEffect(() => { 
 		loadComments();
 	}, []);
 

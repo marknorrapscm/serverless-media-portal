@@ -11,7 +11,6 @@ const updateVideo = require("../persistence/update-video");
 module.exports.addViewToVideo = async event => {
 	try {
 		const videoHash = event.queryStringParameters.videoHash;
-
 		const res = await addViewToVideo(videoHash);
 
 		if (res.success) {
@@ -44,8 +43,7 @@ module.exports.addCommentToVideo = async event => {
 
 module.exports.editVideo = async event => {
 	try {
-		const body = JSON.parse(event.body);
-		const { video } = body;
+		const { video } = JSON.parse(event.body);
 		const userHash = getAuthToken(event);
 
 		if (await isUserAnAdmin(userHash)) {
