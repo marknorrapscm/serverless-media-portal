@@ -67,7 +67,9 @@ The setup is quick and easy. We need to do three things: install [Serverless Fra
 Serverless Framework's setup is widely documented but it's so easy I might as well show it here.
 
 1. Open a terminal
-2. Run `npm install serverless -g`
+2. Run `npm install serverless@^2.7.0 -g`
+
+*N.B. Serverless Framework v3 was recently released and the project will implement it soon, but for now v2 is required.*
 
 ### 1.2 Create an IAM user for Serverless
 
