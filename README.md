@@ -27,9 +27,13 @@ This article will be split up into four sections:
 3. [Build and deploy the frontend](#section-3)
 4. [Technical details](#section-4) *(optional)*
 
-Don't be intimidated by the length of this readme; much of it is screenshots and none of the actions required from you are complicated. If you have an AWS account and some coding experience you are good to go.
+Don't be intimidated by the length of this readme; most of it is screenshots and none of the actions required from you are complicated. If you have an AWS account and some coding experience you are good to go.
+
+<p>&nbsp;</p>
 
 ---
+
+<p>&nbsp;</p>
 
 ### Background
 I built this a few months ago and have used it with my own family both to share and archive family videos. I didn't see many options in this space and I wanted it to be free (or as close to free as possible) so I ended up building my own solution. I figure it will be of use to others so I have put some effort into making it easily distributable. I've used it for months with ~100 videos uploaded.
@@ -46,10 +50,11 @@ The AWS backend is created using [Serverless Framework](https://www.serverless.c
 
 This project is meant for sharing small videos; the maximum video size is 512MB and only `.mp4` is supported. It also doesn't compress the videos for you, so if you're recording directly from your phone I would recommend getting an app to compress the videos before uploading them here. Messaging apps like WhatsApp do a good job at compressing videos and that is the source of most of the videos I have personally uploaded.
 
-
+<p>&nbsp;</p>
 
 ---
 
+<p>&nbsp;</p>
 
 <a name="section-1"></a>
 
@@ -62,7 +67,9 @@ The setup is quick and easy. We need to do three things: install [Serverless Fra
 Serverless Framework's setup is widely documented but it's so easy I might as well show it here.
 
 1. Open a terminal
-2. Run `npm install serverless -g`
+2. Run `npm install serverless@^2.7.0 -g`
+
+*N.B. Serverless Framework v3 was recently released and the project will implement it soon, but for now v2 is required.*
 
 ### 1.2 Create an IAM user for Serverless
 
@@ -104,8 +111,11 @@ I prefer to use [Fork](https://git-fork.com/) as my Git client, but the command 
 
 This will pull down the project, which is a mono-repo containing both the frontend and the backend.
 
+<p>&nbsp;</p>
 
 ---
+
+<p>&nbsp;</p>
 
 <a name="section-2"></a>
 
@@ -121,9 +131,7 @@ If you've correctly setup Serverless as shown in step #1 the deployment process 
 
 ### 2.1 Create FFmpeg layer
 
-We use FFmpeg to process our video uploads. As this project uses Lambdas, we need to supply this dependency as a Lambda layer.
-
-We're going to use a pre-made layer from the AWS Serverless Application Repository and supply the ARN to the template. We *could* create our own layer, but there are various issues surrounding this (which I've written more about [here](https://www.norrapscm.com/posts/2021-02-08-generate-thumbnails-in-lambda-from-s3-with-ffmpeg/#section-3)). This is the quickest and easiest way to get FFmpeg into our application.
+We use FFmpeg to process our video uploads. As this project uses Lambdas, we need to supply this dependency as a Lambda layer. We're going to use a pre-made layer from the AWS Serverless Application Repository and supply the ARN to the template.
 
 Open the [ffmpeg-lambda-layer repo](https://serverlessrepo.aws.amazon.com/applications/us-east-1/145266761615/ffmpeg-lambda-layer) and click "Deploy". This doesn't actually deploy anything, it just opens the template in the AWS Console. **Make sure you are still in your desired region. Clicking the deploy button in SAR has a habit of routing you to us-east-1.** Leave the default options, scroll to the bottom and click deploy:
 
@@ -191,7 +199,11 @@ This deploy should be much quicker since the Cloudfront distributions are alread
 
 If you're curious as to why we had to deploy the backend twice I explain the motivations [here](#why-deploy-twice). However, that isn't important for most users. What matters is that we now have the backend of our home media portal running in AWS. We can point whatever frontend we like at it.
 
+<p>&nbsp;</p>
+
 ---
+
+<p>&nbsp;</p>
 
 <a name="section-3"></a>
 
@@ -250,15 +262,7 @@ This gives us a very basic upload page. Click "Browse" to select your video:
 
 ![https://i.imgur.com/LacFsLL.png](https://i.imgur.com/LacFsLL.png)
 
-When the `.mp4` is selected, the upload will begin automatically. Remember you are limited to files <= 512MB in size. Once the video is selected it automatically begins uploaded; once the upload is complete, three thumbnails will be generated for you to choose from. The thumbnails are 140px in height and however wide they need to be to preserve the aspect ratio.
-
----
-
-#### What's happening under the bonnet here?
-
-To perform the upload a pre-signed URL is generated and your file is sent to the video bucket. Whenever a video is added to that bucket, a lambda is triggered which downloads the video to temporary storage and uses the FFmpeg executable we added via a layer to generate the thumbnails and write them to the images bucket. I wrote an article about this [here](https://www.norrapscm.com/posts/2021-02-08-generate-thumbnails-in-lambda-from-s3-with-ffmpeg/#section-3) .
-
----
+When the `.mp4` is selected, the upload will begin automatically. Remember you are limited to files <= 512MB in size. Once the video is selected it automatically begins uploading; once the upload is complete, three thumbnails will be generated for you to choose from. 
 
 Complete the rest of the fields and select whatever tags you want the video to be visible to. Right now we only have the `Admin` tag, so if you - the admin - want to be able to view it, make sure you select it! 
 
@@ -356,8 +360,11 @@ With the files uploaded and public access granted, you should be able to navigat
 
 ![https://i.imgur.com/KXlWpY3.png](https://i.imgur.com/KXlWpY3.png)
 
+<p>&nbsp;</p>
 
 ---
+
+<p>&nbsp;</p>
 
 <a name="section-4"></a>
 
