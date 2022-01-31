@@ -8,6 +8,10 @@ plugins:
   - serverless-offline
   - serverless-plugin-scripts
 
+package:
+  patterns:
+    - '!node_modules/serverless-offline'
+
 custom:
   # These are the only variables you need to edit:
   region: eu-west-1
