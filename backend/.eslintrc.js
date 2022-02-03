@@ -21,6 +21,7 @@ module.exports = {
 		"quote-props": "off",
 		"no-use-before-define": "off",
 		"arrow-parens": ["error", "as-needed"],
-		"prefer-template": "error"
+		"prefer-template": "error",
+		"no-console": "off"
 	}
 };
