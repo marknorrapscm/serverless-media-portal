@@ -1,4 +1,6 @@
+/* eslint-disable no-restricted-syntax */
 const AWS = require("aws-sdk");
+const { unmarshall } = AWS.DynamoDB.Converter;
 
 /**
  * Takes DynamoDB query results - either as an array of as a
@@ -9,16 +11,20 @@ const AWS = require("aws-sdk");
  */
 module.exports = dynamoResult => {
 	if (Array.isArray(dynamoResult)) {
-		return performExtractionOnArray(dynamoResult);
-	} else if (typeof dynamoResult === "object") {
-		return AWS.DynamoDB.Converter.unmarshall(dynamoResult);
+		return dynamoResult.map(x => recursivelyExtractItems(x));
 	} else {
-		throw Error("Invalid parameter passed to extractItemsFromDynamoResult()");
+		return unmarshall(dynamoResult);
 	}
 };
 
-const performExtractionOnArray = arrayOfDynamoItems => {
-	const results = arrayOfDynamoItems.map(item => AWS.DynamoDB.Converter.unmarshall(item));
+const recursivelyExtractItems = dynamoResult => {
+	const res = unmarshall(dynamoResult);
 
-	return results;
+	for (const [key, value] of Object.entries(dynamoResult)) {
+		if (Array.isArray(value)) {
+			res[key] = value.map(x => recursivelyExtractItems(x));
+		}
+	}
+
+	return res;
 };
