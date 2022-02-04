@@ -1,6 +1,5 @@
 const getVideo = require("../../application/videos/get-video");
 const updateVideo = require("../../application/videos/update-video");
-const VideoDao = require("../../persistence/daos/VideoDao");
 
 module.exports = async videoHash => {
 	const video = await getVideo(videoHash);

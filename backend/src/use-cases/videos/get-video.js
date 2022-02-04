@@ -7,7 +7,11 @@ module.exports = async videoHash => {
 
 	const video = await getVideo(videoHash);
 
-	return video;
+	if (video) {
+		return video;
+	} else {
+		throw new Error(`Video with hash ${videoHash} not found`);
+	}
 };
 
 const isHashValid = str => {

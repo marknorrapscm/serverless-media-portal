@@ -1,4 +1,5 @@
 const addViewToVideo = require("../use-cases/videos/add-view-to-video");
+const editVideo = require("../use-cases/videos/edit-video");
 const getVideo = require("../use-cases/videos/get-video");
 const listAllVideosForUser = require("../use-cases/videos/list-all-videos-for-user");
 const listRandomVideos = require("../use-cases/videos/list-random-videos");
@@ -6,7 +7,7 @@ const ResponseFactory = require("../utility/factories/ResponseFactory");
 
 module.exports.listAllVideosForUser = async event => {
 	try {
-		const videos = await listAllVideosForUser(event.requestContext.authorizer.user);
+		const videos = await listAllVideosForUser(getUserFromEvent(event));
 
 		return ResponseFactory.getSuccessResponse({ videos });
 	} catch (e) {
@@ -27,7 +28,7 @@ module.exports.getVideo = async event => {
 module.exports.listRandomVideos = async event => {
 	try {
 		const videos = await listRandomVideos(
-			event.requestContext.authorizer.user,
+			getUserFromEvent(event),
 			extractQueryStringParam(event, "count") || 5
 		);
 
@@ -72,6 +73,8 @@ const handleErrors = async (summaryMsg, error) => {
 
 	return ResponseFactory.getFailureResponse(`${summaryMsg}: ${error.message}`);
 };
+
+const getUserFromEvent = event => event.requestContext.authorizer.user;
 
 // module.exports.deleteVideo = async event => {
 // 	try {
