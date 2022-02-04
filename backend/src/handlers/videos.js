@@ -47,6 +47,17 @@ module.exports.addViewToVideo = async event => {
 	}
 };
 
+module.exports.editVideo = async event => {
+	try {
+		const { video } = JSON.parse(event.body);
+		await editVideo(video, getUserFromEvent(event));
+
+		return ResponseFactory.getSuccessResponse();
+	} catch (e) {
+		return ResponseFactory.getFailureResponse(e.message);
+	}
+};
+
 const extractQueryStringParam = (event, paramName) => {
 	if (event.queryStringParameters) {
 		return event.queryStringParameters[paramName];
