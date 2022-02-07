@@ -1,9 +1,12 @@
 const getUser = require("../persistence/get-user");
-const getAuthToken = require("../utility/get-auth-token");
+const { getAuthToken } = require("../utility/request-helpers");
+
+/**
+ * Refactor this to use the new /application/get-user.js
+ */
 
 module.exports.authorizeUser = async (event, context, callback) => {
-	const authorizationToken = getAuthToken(event);
-	const userObj = await getUser(authorizationToken);
+	const userObj = await getUserFromRequest(event);
 
 	if (userObj) {
 		return getAllowPolicy(event.methodArn, userObj);
@@ -13,14 +16,18 @@ module.exports.authorizeUser = async (event, context, callback) => {
 };
 
 module.exports.authorizeAdmin = async (event, context, callback) => {
-	const authorizationToken = getAuthToken(event);
-	const userObj = await getUser(authorizationToken);
+	const userObj = await getUserFromRequest(event);
 
 	if (isUserAnAdmin(userObj)) {
 		return getAllowPolicy(event.methodArn, userObj);
 	} else {
 		callback("Unauthorized", null);
 	}
+};
+
+const getUserFromRequest = async event => {
+	const authorizationToken = getAuthToken(event);
+	return getUser(authorizationToken);
 };
 
 const isUserAnAdmin = userObj => userObj
