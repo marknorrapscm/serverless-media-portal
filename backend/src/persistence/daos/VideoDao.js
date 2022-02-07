@@ -1,4 +1,5 @@
-const Dynamo = require("../db/DynamoDb");
+const Dynamo = require("../storage/DynamoDb");
+const { marshall } = require("../../utility/marshalling");
 
 const PRIMARY_KEY = "VideoHash";
 
@@ -22,11 +23,18 @@ module.exports = class VideoDao {
 	}
 
 	static async DeleteVideo(videoHash) {
-		//
+		return new Dynamo().DeleteRowFromTable(
+			process.env.videoTableName,
+			"VideoHash",
+			videoHash
+		);
 	}
 
-	static async AddVideo(videoHash) {
-		//
+	static async AddVideo(addVideoModel) {
+		return new Dynamo().AddItemToTable(
+			process.env.videoTableName,
+			addVideoModel
+		);
 	}
 
 	static async UpdateVideo(video) {
