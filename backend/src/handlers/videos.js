@@ -3,7 +3,10 @@ const editVideo = require("../use-cases/videos/edit-video");
 const getVideo = require("../use-cases/videos/get-video");
 const listAllVideosForUser = require("../use-cases/videos/list-all-videos-for-user");
 const listRandomVideos = require("../use-cases/videos/list-random-videos");
+const { extractQueryStringParam, getUserFromEvent, handleErrors } = require("../utility/request-helpers");
 const ResponseFactory = require("../utility/factories/ResponseFactory");
+const getVideoUploadUrl = require("../application/videos/get-video-upload-url");
+const addVideo = require("../use-cases/videos/add-video");
 
 module.exports.listAllVideosForUser = async event => {
 	try {
@@ -59,40 +62,33 @@ module.exports.editVideo = async event => {
 	}
 };
 
-const extractQueryStringParam = (event, paramName) => {
-	if (event.queryStringParameters) {
-		return event.queryStringParameters[paramName];
-	} else {
-		return undefined;
+module.exports.deleteVideo = async event => {
+	try {
+		await addViewToVideo(extractQueryStringParam(event, "videoHash"));
+
+		return ResponseFactory.getSuccessResponse();
+	} catch (e) {
+		return ResponseFactory.getFailureResponse(e.message);
 	}
 };
 
-const handleErrors = async (summaryMsg, error) => {
-	console.log(summaryMsg);
-	console.log(error);
+module.exports.getPresignedUrlForVideoUpload = async event => {
+	try {
+		const presignedUrl = await getVideoUploadUrl(extractQueryStringParam(event, "fileName"));
 
-	return ResponseFactory.getFailureResponse(`${summaryMsg}: ${error.message}`);
+		return ResponseFactory.getSuccessResponse({ presignedUrl });
+	} catch (e) {
+		return ResponseFactory.getFailureResponse(e.message);
+	}
 };
 
-const getUserFromEvent = event => event.requestContext.authorizer.user;
+module.exports.addVideo = async event => {
+	try {
+		const body = JSON.parse(event.body);
+		await addVideo(body.formData);
 
-// module.exports.deleteVideo = async event => {
-// 	try {
-// 		const videoHash = event.queryStringParameters.videoHash;
-// 		const userHash = getAuthToken(event);
-
-// 		if (await isUserAnAdmin(userHash)) {
-// 			const res = await deleteVideo(videoHash);
-
-// 			if (res.success) {
-// 				return ResponseFactory.getSuccessResponse();
-// 			} else {
-// 				throw Error(res.message);
-// 			}
-// 		} else {
-// 			throw Error("Only admins can delete videos");
-// 		}
-// 	} catch (e) {
-// 		return ResponseFactory.getFailureResponse(e.message);
-// 	}
-// };
+		return ResponseFactory.getSuccessResponse();
+	} catch (e) {
+		return ResponseFactory.getFailureResponse(e.message);
+	}
+};
