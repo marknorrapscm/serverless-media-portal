@@ -7,6 +7,7 @@ const { extractQueryStringParam, getUserFromEvent, handleErrors } = require("../
 const ResponseFactory = require("../utility/factories/ResponseFactory");
 const getVideoUploadUrl = require("../application/videos/get-video-upload-url");
 const addVideo = require("../use-cases/videos/add-video");
+const deleteVideo = require("../use-cases/videos/delete-video");
 
 module.exports.listAllVideosForUser = async event => {
 	try {
@@ -64,7 +65,7 @@ module.exports.editVideo = async event => {
 
 module.exports.deleteVideo = async event => {
 	try {
-		await addViewToVideo(extractQueryStringParam(event, "videoHash"));
+		await deleteVideo(extractQueryStringParam(event, "videoHash"));
 
 		return ResponseFactory.getSuccessResponse();
 	} catch (e) {

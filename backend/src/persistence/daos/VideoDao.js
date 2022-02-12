@@ -24,7 +24,7 @@ module.exports = class VideoDao {
 	static async DeleteVideo(videoHash) {
 		return new Dynamo().DeleteRowFromTable(
 			process.env.videoTableName,
-			"VideoHash",
+			PRIMARY_KEY,
 			videoHash
 		);
 	}

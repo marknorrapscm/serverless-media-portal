@@ -1,8 +1,8 @@
 const addVideo = require("../../application/videos/add-video");
-const AddVideoModel = require("../../persistence/entity-models/AddVideoModel");
+const VideoModel = require("../../persistence/entity-models/VideoModel");
 
 module.exports = async formData => {
-	const addVideoModel = new AddVideoModel(formData);
+	const videoModel = new VideoModel(formData);
 
-	await addVideo(addVideoModel);
+	await addVideo(videoModel);
 };
