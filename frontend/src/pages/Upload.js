@@ -52,16 +52,16 @@ export default function Upload() {
 
 	const performFormUpload = async formData => {
 		const data = {
-			videoFileName: selectedVideoName,
-			videoDate: formData.date,
-			title: formData.title,
-			description: formData.description,
-			duration: formData.duration,
-			thumbnailName: selectedThumbnailName,
-			tags: getSelectedTags(formData)
+			VideoFileName: selectedVideoName,
+			VideoDate: formData.date,
+			Title: formData.title,
+			Description: formData.description,
+			Duration: formData.duration,
+			ThumbnailName: selectedThumbnailName,
+			Tags: getSelectedTags(formData)
 		};
 
-		const res = await authPost("http://localhost:3001/dev/submitForm", {
+		const res = await authPost("http://localhost:3001/dev/addVideo", {
 			formData: data
 		});
 
@@ -100,11 +100,11 @@ export default function Upload() {
 
 	const uploadFile = async videoFile => {
 		setStatusMessage("Getting presigned URL");
-		const uploadTarget = await getPresignedUrl(videoFile.name);
+		const presignedUrl = await getPresignedUrl(videoFile.name);
 
-		if (uploadTarget) {
+		if (presignedUrl) {
 			setStatusMessage("Performing file upload");
-			if (await sendFileToPresignedUrl(uploadTarget.uploadUrl, videoFile)) {
+			if (await sendFileToPresignedUrl(presignedUrl, videoFile)) {
 				setStatusMessage("Video uploaded");
 				setSelectedVideoName(videoFile.name);
 				setVideoUploadInProgress(false);
@@ -119,8 +119,8 @@ export default function Upload() {
 	const getPresignedUrl = async fileName => {
 		const res = await authFetch(`http://localhost:3001/dev/getPresignedUrlForVideoUpload?fileName=${fileName}`);
 
-		if (res && res.uploadTarget) {
-			return res.uploadTarget;
+		if (res && res.presignedUrl) {
+			return res.presignedUrl;
 		} else {
 			setStatusMessage("Error in getPresignedUrl()");
 			console.error(res);

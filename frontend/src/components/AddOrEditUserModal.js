@@ -43,10 +43,9 @@ export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
 		const formData = Object.fromEntries(new FormData(form).entries());
 		
 		const dataObj = {
-			userHash: getUserHash(formData),
-			displayName: formData.displayName,
-			dateOfBirth: formData.dateOfBirth,
-			tags: getSelectedTags(formData)
+			UserHash: getUserHash(formData),
+			DisplayName: formData.displayName,
+			Tags: getSelectedTags(formData)
 		};
 
 		return dataObj;
@@ -109,7 +108,7 @@ export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
 					<Form.Row>
 						<Form.Label column xs={3}>Name:</Form.Label>
 						<Col>
-							<Form.Control name="displayName" type="text" defaultValue={user.DisplayName} required />
+							<Form.Control name="displayName" type="text" defaultValue={user.DisplayName} maxLength="75" required />
 						</Col>
 					</Form.Row>
 
