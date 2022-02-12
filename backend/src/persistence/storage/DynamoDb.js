@@ -58,7 +58,7 @@ module.exports = class Dynamo {
 
 	async DeleteRowFromTable(tableName, key, value) {
 		const params = {
-			Key: { marshall({ [key]: value }) },
+			Key: { ...marshall({ [key]: value }) },
 			TableName: tableName
 		};
 
