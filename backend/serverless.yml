@@ -194,170 +194,47 @@ resources:
             ForwardedValues:
               QueryString: true
 
+
 functions:
-  runAfterDeploy:
-    handler: src/handlers/tasks.runAfterDeploy
+  authorizeUser:
+    handler: src/handlers/authorization.authorizeUser
+  authorizeAdmin:
+    handler: src/handlers/authorization.authorizeAdmin
+  listAllVideosForUser:
+    handler: src/handlers/videos.listAllVideosForUser
+    description: List all videos for authorized user
     events:
       - http:
-          path: /runAfterDeploy
-          method: get
-          cors: true
-  handshake:
-    handler: src/handlers/read.handshake
-    description: Perform an authenticated handshake
-    events:
-      - http:
-          path: /handshake
+          path: /listAllVideosForUser
           method: get
           cors: true
           authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  listVideos:
-    handler: src/handlers/read.listVideos
-    description: Get a list of videos for the logged in user
-    events:
-      - http:
-          path: /listVideos
-          method: get
-          cors: true
-          authorizer:
-            name: authorizer
+            name: authorizeUser
             resultTtlInSeconds: 0
   getVideo:
-    handler: src/handlers/read.getVideo
-    description: Get a single video based on a hash supplied by the caller
+    handler: src/handlers/videos.getVideo
+    description: Gets a single video
     events:
       - http:
           path: /getVideo
           method: get
           cors: true
           authorizer:
-            name: authorizer
+            name: authorizeUser
             resultTtlInSeconds: 0
   listRandomVideos:
-    handler: src/handlers/read.listRandomVideos
-    description: Get a random list of videos
+    handler: src/handlers/videos.listRandomVideos
+    description: Get a random list of videos for a given user
     events:
       - http:
           path: /listRandomVideos
           method: get
           cors: true
           authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  getTagsForUser:
-    handler: src/handlers/read.getTagsForUser
-    description: Get the tags available to the logged in user
-    events:
-      - http:
-          path: /getTagsForUser
-          method: get
-          cors: true
-          authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  getAllTags:
-    handler: src/handlers/read.getAllTags
-    description: Get all tags from the smp_Tags table
-    events:
-      - http:
-          path: /getAllTags
-          method: get
-          cors: true
-          authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  addTag:
-    handler: src/handlers/write.addTag
-    description: Adds a tag to the smp_Tags table
-    events:
-      - http:
-          path: /addTag
-          method: post
-          cors: true
-          authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  deleteTag:
-    handler: src/handlers/write.deleteTag
-    description: Deletes a tag to the smp_Tags table
-    events:
-      - http:
-          path: /deleteTag
-          method: get
-          cors: true
-          authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  getPresignedUrlForVideoUpload:
-    handler: src/handlers/upload.getPresignedUrlForVideoUpload
-    description: Generates a pre-signed URL allowing upload of .mp4 files to S3.
-    events:
-      - http:
-          path: /getPresignedUrlForVideoUpload
-          method: get
-          cors: true
-          authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  submitForm:
-    handler: src/handlers/upload.submitForm
-    description: Handle video upload form submission
-    events:
-      - http:
-          path: /submitForm
-          method: post
-          cors: true
-          authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  listUsers:
-    handler: src/handlers/manageusers.listUsers
-    description: Gets a list of all users
-    events:
-      - http:
-          path: /listUsers
-          method: get
-          cors: true
-          authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  updateUser:
-    handler: src/handlers/manageusers.updateUser
-    description: Update a user
-    events:
-      - http:
-          path: /updateUser
-          method: post
-          cors: true
-          authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  addUser:
-    handler: src/handlers/manageusers.addUser
-    description: Adds a new user
-    events:
-      - http:
-          path: /addUser
-          method: post
-          cors: true
-          authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  deleteUser:
-    handler: src/handlers/manageusers.deleteUser
-    description: Deletes a user
-    events:
-      - http:
-          path: /deleteUser
-          method: get
-          cors: true
-          authorizer:
-            name: authorizer
+            name: authorizeUser
             resultTtlInSeconds: 0
   addViewToVideo:
-    handler: src/handlers/write.addViewToVideo
+    handler: src/handlers/videos.addViewToVideo
     description: Adds one view to the specified video hash
     events:
       - http:
@@ -365,32 +242,10 @@ functions:
           method: get
           cors: true
           authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  addCommentToVideo:
-    handler: src/handlers/write.addCommentToVideo
-    description: Adds a comment to a video
-    events:
-      - http:
-          path: /addCommentToVideo
-          method: post
-          cors: true
-          authorizer:
-            name: authorizer
-            resultTtlInSeconds: 0
-  getCommentsForVideo:
-    handler: src/handlers/read.getCommentsForVideo
-    description: Get the comments for a specified video
-    events:
-      - http:
-          path: /getCommentsForVideo
-          method: get
-          cors: true
-          authorizer:
-            name: authorizer
+            name: authorizeUser
             resultTtlInSeconds: 0
   editVideo:
-    handler: src/handlers/write.editVideo
+    handler: src/handlers/videos.editVideo
     description: Save edits to video
     events:
       - http:
@@ -398,21 +253,175 @@ functions:
           method: post
           cors: true
           authorizer:
-            name: authorizer
+            name: authorizeAdmin
             resultTtlInSeconds: 0
   deleteVideo:
-    handler: src/handlers/write.deleteVideo
-    description: Deletes a specified video
+    handler: src/handlers/videos.deleteVideo
+    description: Delete a video
     events:
       - http:
           path: /deleteVideo
           method: get
           cors: true
           authorizer:
-            name: authorizer
+            name: authorizeAdmin
+            resultTtlInSeconds: 0
+  getPresignedUrlForVideoUpload:
+    handler: src/handlers/videos.getPresignedUrlForVideoUpload
+    description: Generates a pre-signed URL allowing upload of .mp4 files to S3.
+    events:
+      - http:
+          path: /getPresignedUrlForVideoUpload
+          method: get
+          cors: true
+          authorizer:
+            name: authorizeAdmin
+            resultTtlInSeconds: 0
+  addVideo:
+    handler: src/handlers/videos.addVideo
+    description: Handle video upload form submission
+    events:
+      - http:
+          path: /addVideo
+          method: post
+          cors: true
+          authorizer:
+            name: authorizeAdmin
+            resultTtlInSeconds: 0
+  getCommentsForVideo:
+    handler: src/handlers/videos.getCommentsForVideo
+    description: Get the comments for a specified video
+    events:
+      - http:
+          path: /getCommentsForVideo
+          method: get
+          cors: true
+          authorizer:
+            name: authorizeUser
+            resultTtlInSeconds: 0
+  addCommentToVideo:
+    handler: src/handlers/videos.addCommentToVideo
+    description: Adds a comment to a video
+    events:
+      - http:
+          path: /addCommentToVideo
+          method: post
+          cors: true
+          authorizer:
+            name: authorizeUser
+            resultTtlInSeconds: 0
+  deleteCommentFromVideo:
+    handler: src/handlers/videos.deleteCommentFromVideo
+    description: Adds a comment to a video
+    events:
+      - http:
+          path: /deleteCommentFromVideo
+          method: get
+          cors: true
+          authorizer:
+            name: authorizeUser
+            resultTtlInSeconds: 0
+  listUsers:
+    handler: src/handlers/users.listUsers
+    description: Gets a list of all users
+    events:
+      - http:
+          path: /listUsers
+          method: get
+          cors: true
+          authorizer:
+            name: authorizeAdmin
+            resultTtlInSeconds: 0
+  addUser:
+    handler: src/handlers/users.addUser
+    description: Adds a new user
+    events:
+      - http:
+          path: /addUser
+          method: post
+          cors: true
+          authorizer:
+            name: authorizeAdmin
+            resultTtlInSeconds: 0
+  editUser:
+    handler: src/handlers/users.editUser
+    description: Update a user
+    events:
+      - http:
+          path: /editUser
+          method: post
+          cors: true
+          authorizer:
+            name: authorizeAdmin
+            resultTtlInSeconds: 0
+  deleteUser:
+    handler: src/handlers/users.deleteUser
+    description: Deletes a user
+    events:
+      - http:
+          path: /deleteUser
+          method: get
+          cors: true
+          authorizer:
+            name: authorizeAdmin
+            resultTtlInSeconds: 0
+  listAllTags:
+    handler: src/handlers/tags.listAllTags
+    description: Gets every tag in the tag table
+    events:
+      - http:
+          path: /listAllTags
+          method: get
+          cors: true
+          authorizer:
+            name: authorizeAdmin
+            resultTtlInSeconds: 0
+  getTagsForUser:
+    handler: src/handlers/tags.getTagsForUser
+    description: Get the tags available to the logged in user
+    events:
+      - http:
+          path: /getTagsForUser
+          method: get
+          cors: true
+          authorizer:
+            name: authorizeAdmin # Does this need to be user? I think users call this at some point
+            resultTtlInSeconds: 0
+  addTag:
+    handler: src/handlers/tags.addTag
+    description: Adds a tag to the smp_Tags table
+    events:
+      - http:
+          path: /addTag
+          method: post
+          cors: true
+          authorizer:
+            name: authorizeAdmin
+            resultTtlInSeconds: 0
+  deleteTag:
+    handler: src/handlers/tags.deleteTag
+    description: Deletes a tag to the smp_Tags table
+    events:
+      - http:
+          path: /deleteTag
+          method: get
+          cors: true
+          authorizer:
+            name: authorizeAdmin
+            resultTtlInSeconds: 0
+  handshake:
+    handler: src/handlers/misc.handshake
+    description: Perform an authenticated handshake
+    events:
+      - http:
+          path: /handshake
+          method: get
+          cors: true
+          authorizer:
+            name: authorizeUser
             resultTtlInSeconds: 0
   thumbnailMaker:
-    handler: src/handlers/upload.thumbnailMaker
+    handler: src/handlers/misc.thumbnailMaker
     memorySize: 5120
     timeout: 60
     maximumEventAge: 60
