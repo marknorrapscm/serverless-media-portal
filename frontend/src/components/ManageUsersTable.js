@@ -15,12 +15,9 @@ export default function ManageUsersTable() {
 	const history = useHistory();
 	
 	useEffect(() => {
-		if(!modalIsOpen) {
-			setIsLoading(true);
-			loadUsers();
-			setSelectedUser({});
-		}
-	}, [modalIsOpen]);
+		setIsLoading(true);
+		loadUsers();
+	}, []);
 
 	const loadUsers = async () => {
 		const res = await authFetch("http://localhost:3001/dev/listUsers");
@@ -38,11 +35,13 @@ export default function ManageUsersTable() {
 	};
 
 	const onDeleteClicked = async userHash => {
+		setIsLoading(true);
 		const res = await authFetch(`http://localhost:3001/dev/deleteUser?userHash=${userHash}`);
-		
+
 		if(res && res.success) {
 			addNotification("User deleted", "success");
 
+			// When users delete the temporary admin, immediately redirect them to login
 			if(userHash === "$2a$10$yGsdhh0HUIWMoECia9IcLeY2R8VMPeYLWSskup3bqHdbVAmNnGNRi") {
 				history.go(0);
 			} else {
@@ -63,6 +62,16 @@ export default function ManageUsersTable() {
 			appearance: type,
 			autoDismiss: true
 		});
+	};
+
+	const onModalClosed = (performReload) => {
+		setModalIsOpen(false);
+		setSelectedUser({});
+
+		if(performReload === true) {
+			setIsLoading(true);
+			loadUsers();
+		}
 	};
 
 	return (
@@ -115,8 +124,12 @@ export default function ManageUsersTable() {
 										variant="danger"
 										size="sm"
 										className="ml-auto"
-										onClick={() => { 
-											if (window.confirm("Are you sure you wish to delete this item?")) {
+										onClick={() => {
+											const msg = user.DisplayName === "Temporary Admin User"
+												? "Are you sure you want to delete the temporary admin user? If you haven't created another admin user, you will lose access to this page"
+												: "Are you sure you wish to delete this item?";
+
+											if (window.confirm(msg)) {
 												onDeleteClicked(user.UserHash);
 											}
 										}}
@@ -135,7 +148,7 @@ export default function ManageUsersTable() {
 			<AddOrEditUserModal
 				user={selectedUser}
 				isOpen={modalIsOpen}
-				close={() => setModalIsOpen(false)} 
+				close={onModalClosed} 
 				editUserMode={userIsBeingEdited}
 			/>
 		</>

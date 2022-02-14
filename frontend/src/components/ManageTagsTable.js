@@ -11,11 +11,8 @@ export default function ManageTagsTable() {
 	const { addToast } = useToasts();
 
 	useEffect(() => {
-		if(!modalIsOpen) {
-			setIsLoading(true);
-			loadTags();
-		}
-	}, [modalIsOpen]);
+		loadTags();
+	}, []);
 
 	const loadTags = async () => {
 		const res = await authFetch("http://localhost:3001/dev/listAllTags");
@@ -27,6 +24,7 @@ export default function ManageTagsTable() {
 	};
 
 	const onDeleteClicked = async tagName => {
+		setIsLoading(true);
 		const res = await authFetch(`http://localhost:3001/dev/deleteTag?tagName=${tagName}`);
 		
 		if(res && res.success) {
@@ -34,6 +32,7 @@ export default function ManageTagsTable() {
 			addNotification("Tag deleted", "success");
 		} else {
 			addNotification("Error deleting tag", "error");
+			setIsLoading(false);
 		}
 	};
 
@@ -46,6 +45,15 @@ export default function ManageTagsTable() {
 			appearance: type,
 			autoDismiss: true
 		});
+	};
+
+	const onTagModalClosed = performReload => {
+		setModalIsOpen(false);
+
+		if(performReload === true) {
+			setIsLoading(true);
+			loadTags();
+		}
 	};
 
 	return (
@@ -104,7 +112,7 @@ export default function ManageTagsTable() {
 
 			<AddTagModal 
 				isOpen={modalIsOpen} 
-				close={() => setModalIsOpen(false)} 
+				close={onTagModalClosed} 
 			/>
 		</>
 	);
