@@ -1,8 +1,8 @@
 const VideoDao = require("../../persistence/daos/VideoDao");
 
-module.exports = async tags => {
+module.exports = async user => {
 	const allVideos = await VideoDao.ListAllVideos();
-	const videosWithTargetTags = filterVideosByTag(allVideos, tags);
+	const videosWithTargetTags = filterVideosByTag(allVideos, user.Tags);
 
 	return videosWithTargetTags;
 };

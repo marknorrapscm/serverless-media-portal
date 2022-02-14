@@ -58,12 +58,13 @@ module.exports = class VideoModel {
 			throw new Error("VideoModel requires a ThumbnailName");
 		}
 
-		this.Description = data.Description;
+		this.Description = data.Description || "";
 		this.VideoDate = data.VideoDate;
 		this.Title = data.Title;
 		this.Duration = data.Duration;
 		this.Tags = data.Tags;
 		this.VideoFileName = data.VideoFileName;
 		this.ThumbnailName = data.ThumbnailName;
+		this.Comments = data.Comments;
 	}
 };

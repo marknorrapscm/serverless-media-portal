@@ -1,38 +1,34 @@
-const getUser = require("../persistence/get-user");
+const authorizeAdmin = require("../use-cases/authorization/authorize-admin");
+const authorizeUser = require("../use-cases/authorization/authorize-user");
 const { getAuthToken } = require("../utility/request-helpers");
 
-/**
- * Refactor this to use the new /application/get-user.js
- */
-
 module.exports.authorizeUser = async (event, context, callback) => {
-	const userObj = await getUserFromRequest(event);
+	try {
+		const res = await authorizeUser(getAuthToken(event));
 
-	if (userObj) {
-		return getAllowPolicy(event.methodArn, userObj);
-	} else {
+		if (res.authorized) {
+			return getAllowPolicy(event.methodArn, res.userObj);
+		} else {
+			throw new Error("User not authorized");
+		}
+	} catch (e) {
 		callback("Unauthorized", null);
 	}
 };
 
 module.exports.authorizeAdmin = async (event, context, callback) => {
-	const userObj = await getUserFromRequest(event);
+	try {
+		const res = await authorizeAdmin(getAuthToken(event));
 
-	if (isUserAnAdmin(userObj)) {
-		return getAllowPolicy(event.methodArn, userObj);
-	} else {
+		if (res.authorized) {
+			return getAllowPolicy(event.methodArn, res.userObj);
+		} else {
+			throw new Error("User not authorized");
+		}
+	} catch (e) {
 		callback("Unauthorized", null);
 	}
 };
-
-const getUserFromRequest = async event => {
-	const authorizationToken = getAuthToken(event);
-	return getUser(authorizationToken);
-};
-
-const isUserAnAdmin = userObj => userObj
-	&& userObj.Tags
-	&& userObj.Tags.includes("Admin");
 
 const getAllowPolicy = (methodArn, userObj) => {
 	return {

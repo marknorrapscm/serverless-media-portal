@@ -1,5 +1,5 @@
+const addVideo = require("../../application/videos/add-video");
 const getVideo = require("../../application/videos/get-video");
-const updateVideo = require("../../application/videos/update-video");
 const VideoModel = require("../../persistence/entity-models/VideoModel");
 
 module.exports = async formData => {
@@ -17,5 +17,5 @@ module.exports = async formData => {
 		Description: formData.Description
 	});
 
-	await updateVideo(newVideoModel);
+	await addVideo(newVideoModel);
 };

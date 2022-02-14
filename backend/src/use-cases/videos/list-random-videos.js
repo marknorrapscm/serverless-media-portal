@@ -1,7 +1,7 @@
 const listAllVideosForUser = require("../../application/videos/list-all-videos-for-user");
 
 module.exports = async (user, numberOfVideos) => {
-	const videosForUser = await listAllVideosForUser(user.Tags, numberOfVideos);
+	const videosForUser = await listAllVideosForUser(user, numberOfVideos);
 
 	if (videosForUser && videosForUser.length > 0) {
 		return selectRandomElementsFromArray(videosForUser, numberOfVideos);

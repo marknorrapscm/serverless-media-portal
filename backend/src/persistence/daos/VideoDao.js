@@ -35,25 +35,4 @@ module.exports = class VideoDao {
 			videoModel
 		);
 	}
-
-	static async UpdateVideo(video) {
-		const params = {
-			TableName: process.env.videoTableName,
-			Key: {
-				[PRIMARY_KEY]: { S: video.VideoHash }
-			},
-			UpdateExpression: "set Title = :title, Description = :description, ViewCount = :viewCount, VideoDate = :videoDate",
-			ExpressionAttributeValues: {
-				":title": { S: video.Title },
-				":description": { S: video.Description },
-				":viewCount": { N: video.ViewCount },
-				":videoDate": { S: video.VideoDate }
-			}
-		};
-
-		await new Dynamo()
-			.GetSdk()
-			.updateItem(params)
-			.promise();
-	}
 };
