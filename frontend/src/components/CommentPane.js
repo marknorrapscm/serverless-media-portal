@@ -39,7 +39,7 @@ export function CommentPane({ videoHash }) {
 		setIsLoading(true);
 		const res = await authFetch(`http://localhost:3001/dev/getCommentsForVideo?videoHash=${videoHash}`);
 
-		if (res && res.success) {
+		if (res && res.success && res.comments) {
 			setCommentList(res.comments);
 		}
 		setIsLoading(false);

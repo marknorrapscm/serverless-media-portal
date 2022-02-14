@@ -21,7 +21,7 @@ export default function Upload() {
 	}, []);
 
 	const loadTags = async () => {
-		const res = await authFetch("http://localhost:3001/dev/getAllTags");
+		const res = await authFetch("http://localhost:3001/dev/listAllTags");
 
 		if (res && res.tags) {
 			setTags(res.tags);

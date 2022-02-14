@@ -20,7 +20,7 @@ export default function Browse() {
 	}, []);
 
 	const loadVideos = async () => {
-		const res = await authFetch("http://localhost:3001/dev/listVideos");
+		const res = await authFetch("http://localhost:3001/dev/listAllVideosForUser");
 
 		if(res && res.videos) {
 			setVideos(res.videos);

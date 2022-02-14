@@ -13,7 +13,7 @@ export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
 	}, []);
 
 	const loadTags = async () => {
-		const res = await authFetch("http://localhost:3001/dev/getAllTags");
+		const res = await authFetch("http://localhost:3001/dev/listAllTags");
 
 		if(res && res.tags) {
 			setAllTags(res.tags);
@@ -27,7 +27,7 @@ export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
 		const uploadResult = await performFormUpload(formData);
 
 		if (uploadResult.success) {
-			close();
+			close(true);
 
 			const msg = editUserMode
 				? "User updated"
@@ -62,7 +62,7 @@ export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
 
 	const getUploadUrl = () => {
 		return editUserMode
-			? "http://localhost:3001/dev/updateUser" 
+			? "http://localhost:3001/dev/editUser" 
 			: "http://localhost:3001/dev/addUser";
 	};
 

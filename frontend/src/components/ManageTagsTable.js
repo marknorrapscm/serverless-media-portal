@@ -18,7 +18,7 @@ export default function ManageTagsTable() {
 	}, [modalIsOpen]);
 
 	const loadTags = async () => {
-		const res = await authFetch("http://localhost:3001/dev/getAllTags");
+		const res = await authFetch("http://localhost:3001/dev/listAllTags");
 
 		if (res && res.tags) {
 			setTags(res.tags);
