@@ -435,5 +435,5 @@ functions:
           existing: true
     layers:
       - ${self:custom.ffmpegLayerArn}
-  authorizer:
-    handler: src/handlers/authorization.authorize
+  runAfterDeploy:
+    handler: src/handlers/misc.runAfterDeploy
