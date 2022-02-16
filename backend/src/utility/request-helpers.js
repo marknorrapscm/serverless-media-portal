@@ -25,4 +25,4 @@ module.exports.getAuthToken = event => {
 	}
 };
 
-module.exports.getUserFromEvent = event => event.requestContext.authorizer.user;
+module.exports.getUserFromEvent = event => JSON.parse(event.requestContext.authorizer.user);

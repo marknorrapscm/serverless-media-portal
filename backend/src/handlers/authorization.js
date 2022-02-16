@@ -12,6 +12,7 @@ module.exports.authorizeUser = async (event, context, callback) => {
 			throw new Error("User not authorized");
 		}
 	} catch (e) {
+		logError(e, event, "authorizeUser");
 		callback("Unauthorized", null);
 	}
 };
@@ -26,6 +27,7 @@ module.exports.authorizeAdmin = async (event, context, callback) => {
 			throw new Error("User not authorized");
 		}
 	} catch (e) {
+		logError(e, event, "authorizeAdmin");
 		callback("Unauthorized", null);
 	}
 };
@@ -42,7 +44,13 @@ const getAllowPolicy = (methodArn, userObj) => {
 			}]
 		},
 		context: {
-			"user": userObj
+			"user": JSON.stringify(userObj)
 		}
 	};
+};
+
+const logError = (error, event, handler) => {
+	console.log(`Unauthorized user in ${handler}`);
+	console.log(error);
+	console.log(event);
 };
