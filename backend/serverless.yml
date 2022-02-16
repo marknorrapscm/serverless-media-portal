@@ -7,6 +7,7 @@ frameworkVersion: "2"
 plugins:
   - serverless-offline
   - serverless-plugin-scripts
+  - serverless-export-env
 
 package:
   patterns:
@@ -35,16 +36,13 @@ provider:
     shouldStartNameWithService: true
   environment:
     # Define environment variables so we can access the information in our Lambdas (e.g. process.env.imageBucketName)
-    imageBucketName: ${self:custom.imageBucketName}
-    videoBucketName: ${self:custom.videoBucketName}
-    videoTableName: !Join [ "", [ "smp_Videos-", '${self:provider.stage}']]
-    userTableName: !Join [ "", [ "smp_Users-", '${self:provider.stage}']]
-    tagTableName: !Join [ "", [ "smp_Tags-", '${self:provider.stage}']]
-    stage: ${self:provider.stage}
-    region: ${self:provider.region}
-    apiGatewayUrl: !Join [ "", [ "https://", !Ref ApiGatewayRestApi, ".execute-api.", '${self:provider.region}', ".amazonaws.com/", '${self:provider.stage}', "/" ]]
-    generatedImageBucketName: !Ref ImageBucket 
-    generatedVideoBucketName: !Ref VideoBucket
+    imageBucketName: !Ref ImageBucket 
+    videoBucketName: !Ref VideoBucket
+    videoTableName: !Join [ "", [ "smp_Videos-", '${self:custom.stage}']]
+    userTableName: !Join [ "", [ "smp_Users-", '${self:custom.stage}']]
+    tagTableName: !Join [ "", [ "smp_Tags-", '${self:custom.stage}']]
+    # These need printed to console
+    apiGatewayUrl: !Join [ "", [ "https://", !Ref ApiGatewayRestApi, ".execute-api.", '${self:custom.region}', ".amazonaws.com/", '${self:custom.stage}', "/" ]]
     imageCloudfrontDomain: !GetAtt ImageCloudfrontDistribution.DomainName
     videoCloudfrontDomain: !GetAtt VideoCloudfrontDistribution.DomainName
 
