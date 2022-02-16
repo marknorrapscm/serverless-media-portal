@@ -13,7 +13,7 @@ export default function ManageUsersTable() {
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const { addToast } = useToasts();
 	const history = useHistory();
-	
+
 	useEffect(() => {
 		setIsLoading(true);
 		loadUsers();
@@ -34,15 +34,25 @@ export default function ManageUsersTable() {
 		setSelectedUser(users.find(x => x.UserHash === userHash));
 	};
 
-	const onDeleteClicked = async userHash => {
+	const onDeleteClicked = (userToDelete) => {
+		const msg = userToDelete.UserHash === "$2a$10$yGsdhh0HUIWMoECia9IcLeY2R8VMPeYLWSskup3bqHdbVAmNnGNRi"
+			? "Are you sure you want to delete the temporary admin user? If you haven't created another admin user, you will lose access to this page"
+			: `Are you sure you wish to delete ${userToDelete.DisplayName} ?`;
+
+		if (window.confirm(msg)) {
+			deleteUser(userToDelete.UserHash);
+		}
+	};
+
+	const deleteUser = async userHash => {
 		setIsLoading(true);
 		const res = await authFetch(`http://localhost:3001/dev/deleteUser?userHash=${userHash}`);
 
-		if(res && res.success) {
+		if (res && res.success) {
 			addNotification("User deleted", "success");
 
 			// When users delete the temporary admin, immediately redirect them to login
-			if(userHash === "$2a$10$yGsdhh0HUIWMoECia9IcLeY2R8VMPeYLWSskup3bqHdbVAmNnGNRi") {
+			if (userHash === "$2a$10$yGsdhh0HUIWMoECia9IcLeY2R8VMPeYLWSskup3bqHdbVAmNnGNRi") {
 				history.go(0);
 			} else {
 				await loadUsers();
@@ -68,7 +78,7 @@ export default function ManageUsersTable() {
 		setModalIsOpen(false);
 		setSelectedUser({});
 
-		if(performReload === true) {
+		if (performReload === true) {
 			setIsLoading(true);
 			loadUsers();
 		}
@@ -87,15 +97,15 @@ export default function ManageUsersTable() {
 								className="float-right"
 								onClick={() => onAddUserClicked()}
 							>
-									Add User
+								Add User
 							</Button>
 						</th>
 					</tr>
 					<tr>
-						<th>Name</th>
+						<th style={{ width: "300px" }}>Name</th>
 						<th>Hash</th>
 						<th>Tags</th>
-						<th style={{ width: 0 }}></th>
+						<th style={{ width: "130px" }}></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -109,14 +119,15 @@ export default function ManageUsersTable() {
 						users.map(user => (
 							<tr key={user.DisplayName}>
 								<td>{user.DisplayName}</td>
-								<td style={{ maxWidth: "100px", textOverflow: "ellipsis", overflow: "hidden" }}>{user.UserHash}</td>
+								<td style={{ maxWidth: "100px", textOverflow: "ellipsis", overflow: "hidden" }} title={user.UserHash}>{user.UserHash}</td>
 								<td>{user.Tags.join(", ")}</td>
-								<td className="d-flex w-20">
+								<td>
 									<Button
 										variant="warning"
 										size="sm"
 										className="ml-auto mr-1"
 										onClick={() => onEditClicked(user.UserHash)}
+										disabled={user.UserHash === "$2a$10$yGsdhh0HUIWMoECia9IcLeY2R8VMPeYLWSskup3bqHdbVAmNnGNRi"}
 									>
 										Edit
 									</Button>
@@ -124,20 +135,11 @@ export default function ManageUsersTable() {
 										variant="danger"
 										size="sm"
 										className="ml-auto"
-										onClick={() => {
-											const msg = user.DisplayName === "Temporary Admin User"
-												? "Are you sure you want to delete the temporary admin user? If you haven't created another admin user, you will lose access to this page"
-												: "Are you sure you wish to delete this item?";
-
-											if (window.confirm(msg)) {
-												onDeleteClicked(user.UserHash);
-											}
-										}}
+										onClick={() => onDeleteClicked(user)}
 										disabled={users.length === 1}
 									>
 										Delete
 									</Button>
-									<div className='delete-button'  />
 								</td>
 							</tr>
 						))
@@ -148,7 +150,7 @@ export default function ManageUsersTable() {
 			<AddOrEditUserModal
 				user={selectedUser}
 				isOpen={modalIsOpen}
-				close={onModalClosed} 
+				close={onModalClosed}
 				editUserMode={userIsBeingEdited}
 			/>
 		</>

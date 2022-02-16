@@ -18,8 +18,6 @@ custom:
   region: eu-west-1
   stage: production
   ffmpegLayerArn: add ARN for FFmpeg layer here
-  imageBucketName: fill after first deploy
-  videoBucketName: fill after first deploy
   numberOfDaysToKeepLogsFor: 30 # Options: https://amzn.to/2NpZZIc
   # ./custom variables
   scripts:

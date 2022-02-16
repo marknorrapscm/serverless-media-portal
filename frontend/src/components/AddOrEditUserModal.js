@@ -115,14 +115,14 @@ export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
 					<Form.Row>
 						<Form.Label column xs={3}>Date of Birth:</Form.Label>
 						<Col>
-							<Form.Control name="dateOfBirth" type="date" disabled={editUserMode} />
+							<Form.Control name="dateOfBirth" type="date" disabled={editUserMode} required={!editUserMode} />
 						</Col>
 					</Form.Row>
 
 					<Form.Row>
 						<Form.Label column xs={3}>Password:</Form.Label>
 						<Col>
-							<Form.Control name="password" type="password" disabled={editUserMode} />
+							<Form.Control name="password" type="password" disabled={editUserMode} required={!editUserMode} />
 						</Col>
 					</Form.Row>
 
