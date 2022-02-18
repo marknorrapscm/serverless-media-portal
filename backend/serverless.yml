@@ -372,16 +372,16 @@ functions:
           authorizer:
             name: authorizeAdmin
             resultTtlInSeconds: 0
-  getTagsForUser:
-    handler: src/handlers/tags.getTagsForUser
-    description: Get the tags available to the logged in user
+  isUserAnAdmin:
+    handler: src/handlers/tags.isUserAnAdmin
+    description: Finds if the user who makes the request is an admin
     events:
       - http:
-          path: /getTagsForUser
+          path: /isUserAnAdmin
           method: get
           cors: true
           authorizer:
-            name: authorizeAdmin # Does this need to be user? I think users call this at some point
+            name: authorizeUser # Does this need to be user? I think users call this at some point
             resultTtlInSeconds: 0
   addTag:
     handler: src/handlers/tags.addTag

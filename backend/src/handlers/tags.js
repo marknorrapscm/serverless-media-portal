@@ -3,6 +3,7 @@ const ResponseFactory = require("../utility/factories/ResponseFactory");
 const listAllTags = require("../use-cases/tags/list-all-tags");
 const addTag = require("../use-cases/tags/add-tag");
 const deleteTag = require("../use-cases/tags/delete-tag");
+const isUserAnAdmin = require("../use-cases/users/is-user-an-admin");
 
 module.exports.listAllTags = async () => {
 	try {
@@ -14,11 +15,12 @@ module.exports.listAllTags = async () => {
 	}
 };
 
-module.exports.getTagsForUser = async event => {
+module.exports.isUserAnAdmin = async event => {
 	try {
 		const user = getUserFromEvent(event);
+		const res = isUserAnAdmin(user);
 
-		return ResponseFactory.getSuccessResponse({ tags: user.Tags });
+		return ResponseFactory.getSuccessResponse({ isUserAnAdmin: res });
 	} catch (e) {
 		return handleErrors("Error in getTagsForUser", e);
 	}
