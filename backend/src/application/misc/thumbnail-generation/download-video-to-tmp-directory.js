@@ -11,7 +11,7 @@ module.exports = async (triggerBucketName, videoFileName) => {
 };
 
 const getVideoFromS3 = async (triggerBucketName, fileName) => {
-	const s3 = new S3().getSdk();
+	const s3 = new S3().GetSdk();
 	const res = await s3.getObject({
 		Bucket: triggerBucketName,
 		Key: fileName

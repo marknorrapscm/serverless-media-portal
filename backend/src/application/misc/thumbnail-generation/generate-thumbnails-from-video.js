@@ -108,6 +108,6 @@ const uploadFileToS3 = async (tmpThumbnailPath, nameOfImageToCreate) => {
 		ACL: "public-read"
 	};
 
-	const s3 = new S3().getSdk();
+	const s3 = new S3().GetSdk();
 	await s3.putObject(uploadParams).promise();
 };
