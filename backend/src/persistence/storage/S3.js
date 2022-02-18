@@ -9,9 +9,9 @@ module.exports = class S3 {
 		return this.sdk;
 	}
 
-	async GetPresignedUploadUrl(fileNameWithExtension, bucketName) {
+	async GetPresignedUrlForVideoUpload(fileNameWithExtension) {
 		const s3Params = {
-			Bucket: bucketName,
+			Bucket: process.env.videoBucketName,
 			Key: fileNameWithExtension,
 			Expires: 300,
 			ContentType: "video/mp4",
@@ -20,5 +20,19 @@ module.exports = class S3 {
 		const uploadUrl = await this.sdk.getSignedUrlPromise("putObject", s3Params);
 
 		return uploadUrl;
+	}
+
+	async DeleteVideo(fileNameWithExtension) {
+		await this.sdk.deleteObject({
+			Bucket: process.env.videoBucketName,
+			Key: fileNameWithExtension
+		}).promise();
+	}
+
+	async DeleteThumbnail(fileNameWithExtension) {
+		await this.sdk.deleteObject({
+			Bucket: process.env.imageBucketName,
+			Key: fileNameWithExtension
+		}).promise();
 	}
 };

@@ -5,10 +5,7 @@ module.exports = async fileName => {
 		? fileName
 		: `${fileName}.mp4`;
 
-	const presignedUrl = await new S3().GetPresignedUploadUrl(
-		fileNameWithExtension,
-		process.env.videoBucketName
-	);
+	const presignedUrl = await new S3().GetPresignedUrlForVideoUpload(fileNameWithExtension);
 
 	return presignedUrl;
 };
