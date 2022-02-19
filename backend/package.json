@@ -3,16 +3,15 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "handler.js",
-	"dependencies": {
-		"jest": "^27.0.6"
-	},
+	"dependencies": {},
 	"devDependencies": {
-		"aws-sdk": "^2.916.0",
-		"eslint": "^7.27.0",
+		"aws-sdk": "^2.1077.0",
+		"eslint": "^7.32.0",
 		"eslint-config-airbnb-base": "^14.2.1",
-		"eslint-plugin-import": "^2.23.3",
+		"eslint-plugin-import": "^2.25.4",
+		"jest": "^27.5.1",
 		"serverless-export-env": "^2.1.0",
-		"serverless-offline": "^8.4.0",
+		"serverless-offline": "^8.5.0",
 		"serverless-plugin-scripts": "^1.0.2"
 	},
 	"scripts": {
