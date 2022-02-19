@@ -39,9 +39,9 @@ module.exports.addTag = async event => {
 
 module.exports.deleteTag = async event => {
 	try {
-		const user = deleteTag(extractQueryStringParam(event, "tagName"));
+		await deleteTag(extractQueryStringParam(event, "tagName"));
 
-		return ResponseFactory.getSuccessResponse({ tags: user.Tags });
+		return ResponseFactory.getSuccessResponse();
 	} catch (e) {
 		return handleErrors("Error in deleteTag", e);
 	}
