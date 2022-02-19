@@ -14,12 +14,7 @@ package:
     - '!node_modules/serverless-offline'
 
 custom:
-  # These are the only variables you need to edit:
-  region: eu-west-1
-  stage: production
-  ffmpegLayerArn: add ARN for FFmpeg layer here
-  numberOfDaysToKeepLogsFor: 30 # Options: https://amzn.to/2NpZZIc
-  # ./custom variables
+  options: ${file(./env.yml)}
   scripts:
     hooks:
        "deploy:finalize": serverless invoke -f runAfterDeploy
@@ -27,20 +22,20 @@ custom:
 provider:
   name: aws
   runtime: nodejs14.x
-  region: ${self:custom.region}
-  stage: ${self:custom.stage}
-  logRetentionInDays: ${self:custom.numberOfDaysToKeepLogsFor}
+  region: ${self:custom.options.region}
+  stage: ${self:custom.options.stage}
+  logRetentionInDays: ${self:custom.options.numberOfDaysToKeepLogsFor}
   apiGateway:
     shouldStartNameWithService: true
   environment:
     # Define environment variables so we can access the information in our Lambdas (e.g. process.env.imageBucketName)
     imageBucketName: !Ref ImageBucket 
     videoBucketName: !Ref VideoBucket
-    videoTableName: !Join [ "", [ "smp_Videos-", '${self:custom.stage}']]
-    userTableName: !Join [ "", [ "smp_Users-", '${self:custom.stage}']]
-    tagTableName: !Join [ "", [ "smp_Tags-", '${self:custom.stage}']]
+    videoTableName: !Join [ "", [ "smp_Videos-", '${self:custom.options.stage}']]
+    userTableName: !Join [ "", [ "smp_Users-", '${self:custom.options.stage}']]
+    tagTableName: !Join [ "", [ "smp_Tags-", '${self:custom.options.stage}']]
     # These need printed to console
-    apiGatewayUrl: !Join [ "", [ "https://", !Ref ApiGatewayRestApi, ".execute-api.", '${self:custom.region}', ".amazonaws.com/", '${self:custom.stage}', "/" ]]
+    apiGatewayUrl: !Join [ "", [ "https://", !Ref ApiGatewayRestApi, ".execute-api.", '${self:custom.options.region}', ".amazonaws.com/", '${self:custom.options.stage}', "/" ]]
     imageCloudfrontDomain: !GetAtt ImageCloudfrontDistribution.DomainName
     videoCloudfrontDomain: !GetAtt VideoCloudfrontDistribution.DomainName
 
@@ -430,6 +425,6 @@ functions:
             - suffix: .mp4
           existing: true
     layers:
-      - ${self:custom.ffmpegLayerArn}
+      - ${self:custom.options.ffmpegLayerArn}
   runAfterDeploy:
     handler: src/handlers/misc.runAfterDeploy
