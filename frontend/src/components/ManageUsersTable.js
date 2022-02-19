@@ -3,7 +3,7 @@ import { Button, Spinner, Table } from "react-bootstrap";
 import { authFetch } from "../lib/auth-fetch";
 import { AddOrEditUserModal } from "../components/AddOrEditUserModal";
 import { useToasts } from "react-toast-notifications";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 export default function ManageUsersTable() {
 	const [isLoading, setIsLoading] = useState(true);
@@ -12,7 +12,7 @@ export default function ManageUsersTable() {
 	const [userIsBeingEdited, setUserIsBeingEdited] = useState(false);
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const { addToast } = useToasts();
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		setIsLoading(true);
@@ -53,7 +53,7 @@ export default function ManageUsersTable() {
 
 			// When users delete the temporary admin, immediately redirect them to login
 			if (userHash === "$2a$10$yGsdhh0HUIWMoECia9IcLeY2R8VMPeYLWSskup3bqHdbVAmNnGNRi") {
-				history.go(0);
+				navigate("/");
 			} else {
 				await loadUsers();
 			}

@@ -11,9 +11,6 @@
         "local-server": "http-server build -p 5000"
     },
     "dependencies": {
-        "@testing-library/jest-dom": "^5.11.5",
-        "@testing-library/react": "^11.1.1",
-        "@testing-library/user-event": "^12.2.0",
         "bcryptjs": "^2.4.3",
         "bootstrap": "^4.6.1",
         "history": "^5.2.0",
@@ -21,11 +18,10 @@
         "react-bootstrap": "^1.6.4",
         "react-dom": "^17.0.2",
         "react-helmet": "^6.1.0",
-        "react-router-dom": "^5.2.0",
-        "react-scripts": "^4.0.3",
+        "react-router-dom": "^6.2.1",
+        "react-scripts": "4.0.3",
         "react-toast-notifications": "^2.5.1",
-        "styled-components": "^5.3.3",
-        "web-vitals": "^0.2.4"
+        "styled-components": "^5.3.3"
     },
     "devDependencies": {
         "eslint": "^7.32.0",

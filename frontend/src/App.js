@@ -1,6 +1,6 @@
 import "./App.css";
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import Browse from "./pages/Browse";
 import Watch from "./pages/Watch";
@@ -21,12 +21,12 @@ export default function App() {
 			<ToastProvider>
 				<Router basename={process.env.PUBLIC_URL}>
 					<Layout>
-						<Switch>
-							<Route path="/" exact component={Browse} />
-							<Route path="/watch/:videoHash" exact component={Watch} />
-							<Route path="/upload" exact component={Upload} />
-							<Route path="/settings" exact component={Settings} />
-						</Switch>
+						<Routes>
+							<Route path="/" exact element={<Browse />} />
+							<Route path="/watch/:videoHash" exact element={<Watch />} />
+							<Route path="/upload" exact element={<Upload />} />
+							<Route path="/settings" exact element={<Settings />} />
+						</Routes>
 					</Layout>
 				</Router>
 			</ToastProvider>

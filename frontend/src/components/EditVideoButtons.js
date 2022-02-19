@@ -4,7 +4,7 @@ import { authFetch, authPost } from "../lib/auth-fetch";
 import isUserAdmin from "../lib/is-user-admin";
 import VideoContext from "./VideoContext";
 import { useToasts } from "react-toast-notifications";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import EditVideoModal from "./EditVideoModal";
 
 export default function EditVideoButtons() {
@@ -12,7 +12,7 @@ export default function EditVideoButtons() {
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const { video, setVideo } = useContext(VideoContext);
 	const { addToast } = useToasts();
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		checkUsersPrivledge();
@@ -29,7 +29,7 @@ export default function EditVideoButtons() {
 
 		if (res && res.success) {
 			addNotification("Video deleted", "success");
-			history.push("/");
+			navigate("/");
 		} else {
 			addNotification("Error deleting video", "error");
 		}

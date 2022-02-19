@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logo from "../logo.svg";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Layout.css";
 import { ReactComponent as HouseIcon } from "../images/home.svg";
 import { ReactComponent as ArrowIcon } from "../images/arrow-left.svg";
@@ -15,7 +15,7 @@ export default function Layout(props) {
 	const [isMenuOpen, setIsMenuOpen] = useState(true);
 	const [restrictedLinks, setRestrictedLinks] = useState([]);
 	const [showConfirmSignoutBtn, setShowConfirmSignoutBtn] = useState(false);
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		loadRestrictedLinks();
@@ -72,7 +72,7 @@ export default function Layout(props) {
 			<div id="page-content-wrapper">
 				<nav className="navbar navbar-expand-lg navbar-light border-bottom" style={{ justifyContent: "left" }}>
 					<div>
-						<button className="btn btn-info back-btn" onClick={() => history.goBack()}>
+						<button className="btn btn-info back-btn" onClick={() => navigate(-1)}>
 							<ArrowIcon />
 						</button>
 
