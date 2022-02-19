@@ -34,7 +34,7 @@ provider:
     videoTableName: !Join [ "", [ "smp_Videos-", '${self:custom.options.stage}']]
     userTableName: !Join [ "", [ "smp_Users-", '${self:custom.options.stage}']]
     tagTableName: !Join [ "", [ "smp_Tags-", '${self:custom.options.stage}']]
-    # These need printed to console
+    # These aren't used on the backend but are printed to console after deployment
     apiGatewayUrl: !Join [ "", [ "https://", !Ref ApiGatewayRestApi, ".execute-api.", '${self:custom.options.region}', ".amazonaws.com/", '${self:custom.options.stage}', "/" ]]
     imageCloudfrontDomain: !GetAtt ImageCloudfrontDistribution.DomainName
     videoCloudfrontDomain: !GetAtt VideoCloudfrontDistribution.DomainName
