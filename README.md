@@ -76,14 +76,14 @@ The release of v2 comes with some breaking changes. If you've already installed 
 
 ##  💻 1. Setup dev environment
 
-The setup is quick and easy. We need to do three things: install [Serverless Framework](https://www.serverless.com/), create an IAM user for it to use and clone the project from the [Github repo](https://github.com/marknorrapscm/serverless-media-portal.git).
+To get going we need to do three things: install [Serverless Framework](https://www.serverless.com/), create an IAM user for it to use and clone the project from the [Github repo](https://github.com/marknorrapscm/serverless-media-portal.git).
 
 ### 1.1 Install Serverless Framework
 
 Serverless Framework's setup is widely documented but it's so easy I might as well show it here.
 
 1. Open a terminal
-2. Run `npm install serverless@^2.7 -g`
+2. Run `npm install serverless@^2.72.2 -g`
 
 *N.B. Serverless Framework v3 was recently released and the project will implement it soon, but for now v2 is required.*
 
@@ -139,15 +139,15 @@ This will pull down the project, which is a mono-repo containing both the fronte
 
 The project you just pulled down contains a `/frontend` and a `/backend` folder. Start by opening the `/backend` folder in your preferred development environment; in my case, [VSCode](https://code.visualstudio.com/).
 
-If you've correctly setup Serverless as shown in step #1 the deployment process is quite simple. We will break it down into three steps:
+With Serverless installed, we then need to:
 
 1. Create a layer containing FFmpeg.
-2. Deploy the project as is. 
-3. A small task automatically runs after the deploy which prints out the S3 bucket names and the Cloudfront and API Gateway URLs that were just created to console. We will take the S3 bucket names, add them to the template and re-deploy. I write more about why we're doing this [here](#why-deploy-twice) if you are interested.
+2. Add a reference to the layer to the backend's `env.yml` file
+2. Deploy the backend as is
 
 ### 2.1 Create FFmpeg layer
 
-We use FFmpeg to process our video uploads. As this project uses Lambdas, we need to supply this dependency as a Lambda layer. We're going to use a pre-made layer from the AWS Serverless Application Repository and supply the ARN to the template.
+We use FFmpeg to process our video uploads. As this project uses Lambdas, we need to supply this dependency as a Lambda layer. We're going to use a pre-made layer from the AWS Serverless Application Repository and supply the ARN to the `env.yml` file.
 
 Open the [ffmpeg-lambda-layer repo](https://serverlessrepo.aws.amazon.com/applications/us-east-1/145266761615/ffmpeg-lambda-layer) and click "Deploy". This doesn't actually deploy anything, it just opens the template in the AWS Console. **Make sure you are still in your desired region. Clicking the deploy button in SAR has a habit of routing you to us-east-1.** Leave the default options, scroll to the bottom and click deploy:
 
@@ -169,11 +169,11 @@ Open a terminal inside the `/backend` folder. Before we do anything, run:
 
 > `npm install`
 
-...then, to deploy, simply run:
+...then, to deploy, run:
 
 > `npm run deploy`
 
-...this might take a few minutes, but once setup any future deploys will be quick; it is mainly the initial setup of the CloudFront instances that is time consuming.
+...this might take a few minutes but any future deploys will be quick; it is the initial setup of the CloudFront instances that is time consuming.
 
 ### 2.3 Update environment variables
 
@@ -188,6 +188,12 @@ Open the `frontend/.env` file and set the following variables:
 * `REACT_APP_imageCloudfrontDomain` to `ImageCloudfrontDomain`
 * `REACT_APP_videoCloudfrontDomain` to `VideoCloudfrontDomain`
 * `REACT_APP_apiGatewayUrl` to `ApiGatewayUrl`
+
+It should look like:
+
+![https://i.imgur.com/RGZ8U4c.png](https://i.imgur.com/RGZ8U4c.png)
+
+The backend is now active in AWS.
 
 <p>&nbsp;</p>
 
@@ -217,7 +223,7 @@ With the environment variables setup, the frontend will point at the AWS assets 
 
 ### 3.1 Create your user account
 
-The idea behind this authentication is to make it as simple as possible for older family members. The auth system is explained in greater detail in the technical section.
+The authentication system is designed to be as easy as possible for older family members to use. For a deeper explanation, check the technical details section at the end.
 
 When the backend is first deployed, it automatically creates a temporary admin user with the following credentials:
 
@@ -303,6 +309,7 @@ This is really the end of the how-to portion of the tutorial as you can host thi
 * Netlify
   * This is what I use. I have several apps running under different sub-domains on my website so I manually deploy the whole lot using the Netlify CLI rather than adding them all to the CI/CD chain. 
 
+It is important to note that, because this is a single page React app, directly linking to or refreshing on the `/watch` or `/settings` page will cause an error unless you correctly configure your host to redirect to `index.html`. This is simple but often overlooked; it is covered in the [deploy-to-s3 readme](docs/deploy-to-s3.md). This is an issue with all SPA's and isn't specific to this project.
 
 <p>&nbsp;</p>
 
@@ -319,3 +326,8 @@ Check the [technical details](docs/technical-details.md) document for further de
 * How the authentication works
 * Issues around AWS costs and the free tier
 * Running the project offline and further development
+
+Notice a bug or want to suggest a feature? Open an issue and I'll respond. Better yet, fork the project and contribute yourself. 
+
+If you like the project make sure to drop a ⭐
+
