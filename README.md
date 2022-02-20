@@ -1,3 +1,14 @@
+<div align="center">
+
+  <img alt="GitHub last commit" src="https://img.shields.io/github/release-date/marknorrapscm/serverless-media-portal?style=flat-square">
+  <img alt="GitHub" src="https://img.shields.io/badge/maintained-yes-green.svg?style=flat-square">
+  <img alt="GitHub" src="https://img.shields.io/github/license/marknorrapscm/serverless-media-portal?style=flat-square">
+  <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/marknorrapscm/serverless-media-portal?style=flat-square">
+
+</div>
+
+<p>&nbsp;</p>
+
 <div align="center" style="text-align:center">
   <img src="https://i.imgur.com/iwJYyux.png" />
   <h1>Serverless Media Portal</h1>
@@ -27,7 +38,7 @@ This article will be split up into four sections:
 3. [Build and deploy the frontend](#section-3)
 4. [Technical details](#section-4) *(optional)*
 
-Don't be intimidated by the length of this readme; most of it is screenshots and none of the actions required from you are complicated. If you have an AWS account and some coding experience you are good to go.
+If you have an AWS account, some basic coding experience and 10 minutes to spare, you are good to go.
 
 <p>&nbsp;</p>
 
@@ -50,6 +61,10 @@ The AWS backend is created using [Serverless Framework](https://www.serverless.c
 ### Limitations
 
 This project is meant for sharing small videos; the maximum video size is 512MB and only `.mp4` is supported. It also doesn't compress the videos for you, so if you're recording directly from your phone I would recommend getting an app to compress the videos before uploading them here. Messaging apps like WhatsApp do a good job at compressing videos and that is the source of most of the videos I have personally uploaded.
+
+### Upgrading from v1?
+
+The release of v2 comes with some breaking changes. If you've already installed v1 (i.e. you set this up before February 2022) you can check the [upgrade guide](docs/upgrade-from-v1.md). It's easy to do and the changes in v2 mean we shouldn't have any breaking changes in future.
 
 <p>&nbsp;</p>
 
