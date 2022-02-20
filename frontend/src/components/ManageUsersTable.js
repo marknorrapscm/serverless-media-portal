@@ -54,6 +54,7 @@ export default function ManageUsersTable() {
 			// When users delete the temporary admin, immediately redirect them to login
 			if (userHash === "$2a$10$yGsdhh0HUIWMoECia9IcLeY2R8VMPeYLWSskup3bqHdbVAmNnGNRi") {
 				navigate("/");
+				window.location.reload("/");
 			} else {
 				await loadUsers();
 			}
