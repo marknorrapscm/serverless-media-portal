@@ -36,7 +36,8 @@ Don't be intimidated by the length of this readme; most of it is screenshots and
 <p>&nbsp;</p>
 
 ### Background
-I built this a few months ago and have used it with my own family both to share and archive family videos. I didn't see many options in this space and I wanted it to be free (or as close to free as possible) so I ended up building my own solution. I figure it will be of use to others so I have put some effort into making it easily distributable. I've used it for months with ~100 videos uploaded.
+
+I wanted a private space to host videos that I could share with my family. After seeing a lack of options in this space, I built my own solution and eventually open sourced it. Significant effort has been made to make the project as easy to deploy as possible.
 
 ### Tech stack: the frontend
 
@@ -141,13 +142,13 @@ This will create the layer in your desired region. If you go to "Layers" on the 
 
 ![https://i.imgur.com/nky4iK9.png](https://i.imgur.com/nky4iK9.png)
 
-Copy the ARN (partially blurred out in the photo above) and paste it into line #14 of the `serverless.yml`:
+Copy the ARN (partially blurred out in the photo above) and paste it into line #4 of the `env.yml` file in the root of the backend project:
 
-![https://i.imgur.com/7pfJrDr.png](https://i.imgur.com/7pfJrDr.png)
+![https://i.imgur.com/B26ZLVD.png](https://i.imgur.com/B26ZLVD.png)
 
 ### 2.2 Deploy backend
 
-Open the `serverless.yml` file and, on line #13, set the region you want to deploy to. I have it set to `eu-west-1`.
+In the `env.yml` file, on line #1, set the region you want to deploy to. By default it is set to `eu-west-1`.
 
 Open a terminal inside the `/backend` folder. Before we do anything, run:
 
@@ -157,47 +158,21 @@ Open a terminal inside the `/backend` folder. Before we do anything, run:
 
 > `npm run deploy`
 
-...this might take a few minutes, but once setup any future deploys will be quick; it's mainly the initial setup of the CloudFront instances that is time consuming.
+...this might take a few minutes, but once setup any future deploys will be quick; it is mainly the initial setup of the CloudFront instances that is time consuming.
 
 ### 2.3 Update environment variables
 
-#### Backend
-
 Once the deploy completes, a task runs which prints out some information about the assets that were just created:
 
-![https://i.imgur.com/bXmuZqC.png](https://i.imgur.com/bXmuZqC.png)
+![https://i.imgur.com/joXSftI.png](https://i.imgur.com/joXSftI.png)
 
-I use the [serverless-scripts plugin](https://github.com/mvila/serverless-plugin-scripts) to execute a function called `runAfterDeploy` which prints this information to the console. You *could* go to the AWS Console to get these values, but this makes life easier for you.
+Three values are printed here; these values are used on the frontend and need to be set as environment variables in the frontend project. You *could* go to the AWS Console to get these values, but printing them to console saves you that trip.
 
-We need the image and video bucket names for the backend. Copy the `ImageBucketName` and `VideoBucketName` into line #16 and #17 of the `serverless.yml`:
-
-![https://i.imgur.com/2nlSSXL.png](https://i.imgur.com/2nlSSXL.png)
-
-...and, while we're at it, delete lines `#44` and `#45` of `serverless.yml`. Two reasons for this: we don't need them again and there's an issue with Serverless Framework whereby calling `!GetAtt` on the CloudFront distribution errors if you make two deploys within quick succession. Why? I don't know, but we don't need this information any longer so remove it to be safe.
-
-#### Frontend
-
-That's the final edit to the `serverless.yml`. Next, we need to set the environment variables for the frontend. To do that, open the `/frontend` folder in your preferred code editor and open the `.env` file at the root of the project (i.e. `/frontend/.env`).
-
-Within the `.env` file, set the following variables:
+Open the `frontend/.env` file and set the following variables:
 
 * `REACT_APP_imageCloudfrontDomain` to `ImageCloudfrontDomain`
 * `REACT_APP_videoCloudfrontDomain` to `VideoCloudfrontDomain`
 * `REACT_APP_apiGatewayUrl` to `ApiGatewayUrl`
-
-It should look like this:
-
-![https://i.imgur.com/mElQTjX.png](https://i.imgur.com/mElQTjX.png)
-
-### 2.4 Re-deploy the backend
-
-With the environment variables updated in the backend, we need to do a final deploy to get those environment variables into AWS.
-
-> `npm run deploy`
-
-This deploy should be much quicker since the Cloudfront distributions are already setup.
-
-If you're curious as to why we had to deploy the backend twice I explain the motivations [here](#why-deploy-twice). However, that isn't important for most users. What matters is that we now have the backend of our home media portal running in AWS. We can point whatever frontend we like at it.
 
 <p>&nbsp;</p>
 
@@ -208,6 +183,8 @@ If you're curious as to why we had to deploy the backend twice I explain the mot
 <a name="section-3"></a>
 
 ## ⭐ 3. Build and deploy the frontend
+
+With the frontend's environment variables set and the backend deployed, we are ready to build and deploy the frontend.
 
 If you haven't already, navigate to the `/frontend` directory and run:
 
@@ -225,19 +202,19 @@ With the environment variables setup, the frontend will point at the AWS assets 
 
 ### 3.1 Create your user account
 
-The idea behind this authentication is to make it as simple as possible for older family members that don't have the typical social accounts that might be available in an OAuth login. Rather than making them sign up (or allowing just anybody to create an account), *we* will create accounts for them and have them login with their name, date of birth and a common password that they can easily remember. The technicalities of the authentication is explained in greater detail in the technical section at the end.
+The idea behind this authentication is to make it as simple as possible for older family members. The auth system is explained in greater detail in the technical section.
 
-The `runAfterDeploy` task in the backend creates a default user with admin access when it first runs. You can login as this user with the following credentials:
+When the backend is first deployed, it automatically creates a temporary admin user with the following credentials:
 
-* **Name:** Temporary Admin User <sup>*n.b. this isn't case sensitive*</sup>
+* **Name:** Temporary Admin User
 * **Date of birth:** 01/01/0001
 * **Password:** password
 
-This should log you in and you should see the empty UI:
+Log in with these credentials and you should see the empty UI:
 
 ![https://i.imgur.com/qijROYJ.png](https://i.imgur.com/qijROYJ.png)
 
-Leaving this account in place is obviously a security risk, so we will create an account with your real details and delete it after. To do this, click "Settings" in the main menu and then click the "Add User" button:
+Leaving this account in place is a security risk, so we will create an account with your real details and delete it after. To do this, click "Settings" in the main menu and then click the "Add User" button:
 
 ![https://i.imgur.com/cn8bOSK.png](https://i.imgur.com/cn8bOSK.png)
 
@@ -249,9 +226,9 @@ In the modal that appears, enter your name, date of birth and a password. Rememb
 
 Click submit and the new user will be created. We now need to delete the temporary account to prevent anybody else from using it. The delete button (which was previously disabled) can now be clicked, so click it to delete the temporary account.
 
-After deleting that account you should automatically be signed out and again presented with the login screen (after all, the account you were logged in as was just deleted). 
+After deleting that account you should automatically be signed out. Here you can login as the new user you just created.
 
-Log in with the account you just created. At this stage, the media portal is good to go.
+At this stage, the media portal is good to go.
 
 
 ### 3.2 Upload a video
@@ -262,7 +239,7 @@ This gives us a very basic upload page. Click "Browse" to select your video:
 
 ![https://i.imgur.com/LacFsLL.png](https://i.imgur.com/LacFsLL.png)
 
-When the `.mp4` is selected, the upload will begin automatically. Remember you are limited to files <= 512MB in size. Once the video is selected it automatically begins uploading; once the upload is complete, three thumbnails will be generated for you to choose from. 
+When the `.mp4` is selected, the upload will begin automatically. Remember you are limited to files <= 512MB in size. Once the video is selected it automatically begins uploading. Once the upload is complete, three thumbnails will be generated for you to choose from. 
 
 Complete the rest of the fields and select whatever tags you want the video to be visible to. Right now we only have the `Admin` tag, so if you - the admin - want to be able to view it, make sure you select it! 
 
@@ -276,7 +253,7 @@ If you click "Home" in the main menu you should see the video listed with the th
 
 ## 3.3 How does tagging work?
 
-Whenever you upload a video, you select tags for that video. Whenever you create a user, you assign tags to that user. Users can only see videos if that video contains a tag that they have been assigned to.
+Whenever you upload a video, you select tags for that video. Whenever you create a user, you assign tags to that user. Users can only see videos if that video contains a tag that they have been assigned.
 
 The "Admin" tag is a special tag that lets you upload and edit videos and add/delete both tags and users.
 
@@ -302,63 +279,15 @@ I personally run the media portal inside a sub-directory on my website. So, inst
 
 ## 3.5 Deploying the frontend
 
-In order to make this useful to people it needs to be deployed to a webhost. Ideally you'd have your own domain as well; it's not particularly easy telling your grandmother to go to https://XkU8BhnR4.europe.some-random-host.com.
+In order to make this useful to people it needs to be deployed to a webhost. Ideally, you'd have your own domain as well - it's not particularly easy telling your grandmother to go to https://XkU8BhnR4.europe.some-random-host.com.
 
-This is really the end of the how-to portion of the tutorial as you can host this site anywhere you want. Since all you need is a static host (because the backend and the videos/images are delivered through AWS) you have a lot of options, but I'd recommend the following two:
+This is really the end of the how-to portion of the tutorial as you can host this site anywhere you want. The app is entirely serverless, so all you need is a static host. There are countless options, but I'd recommend the following:
 
 * S3 static web hosting
-  * Luckily I have [an article on that](https://www.norrapscm.com/posts/2021-05-18-host-static-website-with-s3-cloudflare-custom-domain-free-unlimited-bandwidth/) too
+  * View the [deploy-to-s3 readme](docs/deploy-to-s3.md) for a demonstration of deploying to an S3 bucket.
 * Netlify
   * This is what I use. I have several apps running under different sub-domains on my website so I manually deploy the whole lot using the Netlify CLI rather than adding them all to the CI/CD chain. 
 
-
-### Deploy to S3
-
-I'm going to deploy this build to S3 just for demonstration. This isn't built into the Serverless template so we're going to make it manually in the AWS Console. Again, [my article](https://www.norrapscm.com/posts/2021-05-18-host-static-website-with-s3-cloudflare-custom-domain-free-unlimited-bandwidth/) covers this in greater detail and includes adding a domain via Cloudflare.
-
-Go to the AWS S3 Console and click "Create Bucket".
-
-Give the bucket a name and uncheck the "Block all public access":
-
-![https://i.imgur.com/QHy2o2o.png](https://i.imgur.com/QHy2o2o.png)
-
-The rest of the default settings are fine. Scroll to the bottom and click "Create bucket".
-
-With the bucket created, open it and click the "Properties" tab:
-
-![https://i.imgur.com/tAMSJCO.png](https://i.imgur.com/tAMSJCO.png)
-
-Scroll to the bottom and click "Edit" on the "Static website hosting" panel. Enter the following settings:
-
-![https://i.imgur.com/xs4HjyP.png](https://i.imgur.com/xs4HjyP.png)
-
-Then click "Save changes". After saving, if you scroll to the bottom of the "Permissions" tab you can see the new URL of our webspace:
-
-![https://i.imgur.com/pD3lZVe.png](https://i.imgur.com/pD3lZVe.png)
-
-The URL is in the following format:
-
-> http://**[name-of-bucket]**.s3-website-**[region]**.amazonaws.com/
-
-If you open this URL you'll get a *403 Forbidden* error. Let's upload our app and fix it.
-
-Go back to the "Objects" tab and click "Upload". Note that if you're running the app in a sub-directory, you'll need to create a folder with that sub-directory and upload the build into that.
-
-Click "Add files":
-
-![https://i.imgur.com/yEhz0b3.png](https://i.imgur.com/yEhz0b3.png)
-
-Go to your `/frontend/build` folder and select all the files. Then click the "Add folder" button and select the `/frontend/build/static` folder.
-
-Below the list of files, expand the "Permissions" tab and select "Grant public-read access":
-
-![https://i.imgur.com/WObBgVi.png](https://i.imgur.com/WObBgVi.png)
-
-With all the files selected, click "Upload". 
-
-With the files uploaded and public access granted, you should be able to navigate to the URL of the bucket and see the login screen. Log in with the credentials you created and you should see the same webapp as you saw when you ran it locally:
-
-![https://i.imgur.com/KXlWpY3.png](https://i.imgur.com/KXlWpY3.png)
 
 <p>&nbsp;</p>
 
@@ -370,56 +299,8 @@ With the files uploaded and public access granted, you should be able to navigat
 
 ## ⚙ 4. Technical details (for those interested)
 
-This section isn't necessary but it does explain some technical details.
+Check the [technical details](docs/technical-details.md) document for further detail details, such as:
 
-### How does the auth work?
-
-We use custom authorizers within Lambda. These intercept every request and perform a check of your choosing; in our case, it reads a hash from the `Authorization` header from the request and checks that that hash exists in our `Users` table.
-
-### What's in the `Authorization` header?
-
-Whenever you enter your username, date of birth and password in the login screen, these three values are combined into a string - separated by slashes and with the whitespace. It ends up looking like this:
-
-> `joebloggs/01011990/password`
-
-A strong hashing algorithm (bcrypt) is then applied to this string and a hash is produced. This hash is held in the `Authorization` header of each request and uniquely identifies every user.
-
-The hash is stored in local storage. There is endless debate online about storing information in local storage and it *does* seem to be inferior to using a secure cookie (I may change this in future). The frontend *is* pretty secure from XSS attacks though: React has built-in character escaping and no obscure packages are being used.
-
-Auth systems are a deep dive and I am no expert, nor am I suggesting that this approach is suitable for large systems, but for a system of this scale it is viable.
-
-### AWS costs
-
-<a name="aws-costs"></a>
-
-None of the AWS assets that we create have ongoing running costs; the cost of everything we have created is determined by the level of use. The DynamoDB and Lambda costs are so cheap (at this scale) that they're virtually free.
-
-The asset types more likely to incurr costs are S3 and Cloudfront. Both of these services are covered by the AWS free tier but only for a year and have the following caps:
-
-* 5GB of storage in S3 and 20,000 GET and PUT requests
-* 50GB of data transfer out of Cloudfront
-
-After the first year (or if you exceed these limits) you'll start getting charged. The prices vary per region but [S3 storage](https://aws.amazon.com/s3/pricing/) (in `eu-west-1`) is roughly $0.02 per GB. This isn't much of a concern if you're just uploading small videos.
-
-Then there's [Cloudfront](https://aws.amazon.com/cloudfront/pricing/), which charges $0.085 in `eu-west-1` for every GB of data transferred out. If you've compressed your videos, 1GB is quite a lot. For WhatsApp levels of compression, one minute of video equals about 10MB, so 1GB - or $0.085 - will give you over 1.5 hours of streamed video.
-
-In hindsight, Cloudfront and S3 are fairly pricey for the benefits they deliver to a project of this scale. An alternative storage provider may have worked out cheaper, but from my personal use I still have not been charged anything despite uploading ~100 videos and having several family members use the website. Your mileage may vary and I encourage you to check the AWS pricing pages.
-
-### Why do we deploy the backend twice?
-
-<a name="why-deploy-twice"></a>
-
-If we want to run the project offline (using `npm run offline`) then we need our environment variables to have access to the bucket names so that they can generate pre-signed URLs for upload. The `!GetAtt` and `!Ref` commands do not work when running offline, so we need the names of the buckets to be added manually. 
-
-Having the names of the buckets print to console after deploy (the `!GetAtt` *does* work just after a deploy, seemingly), then getting the user to add those bucket names as custom variables and *then* calling those custom variables as *environment* variables is convoluted, but for the end user it's only one step (copying the names into the custom variables section of the template), so it is relatively painless.
-
-It's an extra inconvenience, but it makes life easier for continued development.
-
-### Stages and running offline
-
-You will notice that the stage is hardcoded to `production` in the `serverless.yml` file. Normally, we'd use the `${opt:stage}` setting in Serverless that would use whatever stage is supplied as a parameter (e.g. `serverless deploy --stage dev`). However, there is a bug that means that the `runAfterDeploy` task that creates the temporary user and prints out the asset URLs does *not* pick up the stage whenever it is supplied as a parameter. It simply reads `undefined` no matter what you supply to it.
-
-This is a sacrifice I've decided to make so that the `runAfterDeploy` task can run as intended. Most people won't be doing further development on this and will likely just have one instance - the production instance - rather than a dev instance for running offline. If you do want to run offline, you'd need to change the stage to `dev` and run a deploy so the S3 buckets exist in AWS. 
-
-
-
+* How the authentication works
+* Issues around AWS costs and the free tier
+* Running the project offline and further development
