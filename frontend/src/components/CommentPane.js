@@ -9,6 +9,7 @@ const CommentContainer = styled.div`
     margin-top: 16px;
     margin-bottom: 16px;
     font-size: 0.95em;
+	padding: 1em;
 `;
 
 const CommentHeader = styled.div`

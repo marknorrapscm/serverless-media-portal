@@ -11,6 +11,14 @@ import { CommentPane } from "../components/CommentPane";
 import EditVideoButtons from "../components/EditVideoButtons";
 import VideoContext from "../components/VideoContext";
 
+const VideoMetadataContainer = styled.div`
+	background-color: #FFF;
+	border: 1px solid #ececec;
+	padding: 0.5em 1em 1em;
+	margin-top: -6px;
+	box-shadow: 1px 2px 4px 0px #e7e7e7;
+`;
+
 const VideoTitle = styled.div`
 	font-weight: 600;
 	font-size: 1.3em;
@@ -42,6 +50,7 @@ const VideoDescription = styled.div`
 	font-size: 0.95em;
 	margin-top: 16px;
 	letter-spacing: -0.02em;
+	padding-right: 2em;
 `;
 
 export default function Watch() {
@@ -70,28 +79,32 @@ export default function Watch() {
 				<SpinnerCentered />
 			) : (
 				<VideoContext.Provider value={{ video, setVideo }}>
-					<Row style={{ padding: "1.75em" }}>
+					<Row className="pt-4 px-2">
 						<Col lg={9} xs={12}>
 							<VideoPlayer />
 
-							<div className="d-flex">
-								<VideoTitle>{video.Title}</VideoTitle>
-								<ViewCounterContainer>
-									<EditVideoButtons />
-									<ViewCounter>
-										{`${video.ViewCount || 0} `}
-										{video.ViewCount == 1 ? "view" : "views"}
-									</ViewCounter>
-								</ViewCounterContainer>
-							</div>
+							<VideoMetadataContainer>
+								<div className="d-flex">
+									<VideoTitle>{video.Title}</VideoTitle>
+									<ViewCounterContainer>
+										<ViewCounter>
+											{`${video.ViewCount || 0} `}
+											{video.ViewCount == 1 ? "view" : "views"}
+										</ViewCounter>
+									</ViewCounterContainer>
+								</div>
 
-							<VideoDate>{getDateString(video.VideoDate)}</VideoDate>
-							<VideoDescription>{video.Description}</VideoDescription>
-							<hr />
+								<VideoDate>{getDateString(video.VideoDate)}</VideoDate>
+
+								<div className="d-flex justify-content-between align-items-end">
+									<VideoDescription>{video.Description}</VideoDescription>
+									<EditVideoButtons />
+								</div>
+							</VideoMetadataContainer>
+
 							<CommentPane videoHash={videoHash} />
-							<hr />
 						</Col>
-						<Col lg={3} xs={12}>
+						<Col lg={3} xs={12} className="pl-1">
 							<RelatedVideosPane />
 						</Col>
 					</Row>

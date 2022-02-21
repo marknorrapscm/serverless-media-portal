@@ -30,7 +30,7 @@ export default function EditVideoModal ({ isOpen, setIsOpen, video, onEditFormSu
 					<h5 className="mb-0">Edit video</h5>
 				</Modal.Title>
 			</Modal.Header>
-			<Modal.Body>
+			<Modal.Body className="px-4 py-3">
 				<Form onSubmit={onSubmit} id="upload-form" className="w-100">
 					<Form.Control name="userHash" type="hidden" defaultValue={video.VideoHash} required />
 

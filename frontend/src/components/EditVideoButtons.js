@@ -59,7 +59,7 @@ export default function EditVideoButtons() {
 	return (
 		!displayEditButtons || (
 			<>
-				<div>
+				<div className="text-nowrap">
 					<Button
 						variant="warning"
 						size="sm"
@@ -72,7 +72,6 @@ export default function EditVideoButtons() {
 					<Button
 						variant="danger"
 						size="sm"
-						className="mr-2"
 						onClick={() => {
 							if (window.confirm("Are you sure you want to delete this video?")) {
 								onDeleteClicked();
