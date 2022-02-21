@@ -8,7 +8,7 @@ const ThumbnailContainer = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
-	padding: 20px 12px 20px 18px;
+	padding: 1.5em 0 2em 0.5em;
 `;
 
 export default function Browse() {
