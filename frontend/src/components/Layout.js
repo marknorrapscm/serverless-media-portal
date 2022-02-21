@@ -56,12 +56,12 @@ export default function Layout(props) {
 
 	return (
 		<div className={`d-flex ${isMenuOpen || "toggled"}`} id="wrapper">
-			<div className="bg-dark border-right" id="sidebar-wrapper">
+			<div className="bg-dark" id="sidebar-wrapper">
 				<div className="sidebar-heading">
 					<img src={logo} alt="logo" />
 					Family Media Portal
 				</div>
-				<div className="list-group list-group-flush">
+				<div className="list-group list-group-flush pt-1">
 					<Link to="/" className="list-group-item list-group-item-action bg-dark">
 						Home
 					</Link>
@@ -70,7 +70,7 @@ export default function Layout(props) {
 			</div>
 
 			<div id="page-content-wrapper">
-				<nav className="navbar navbar-expand-lg navbar-light border-bottom" style={{ justifyContent: "left" }}>
+				<nav className="navbar navbar-expand-lg navbar-light border-bottom" style={{ justifyContent: "left", boxShadow: "none" }}>
 					<div>
 						<button className="btn btn-info back-btn" onClick={() => navigate(-1)}>
 							<ArrowIcon />
@@ -115,7 +115,7 @@ export default function Layout(props) {
 					</div>
 				</nav>
 
-				<div className="container-fluid pl-0 pr-0">{props.children}</div>
+				<div className="container-fluid">{props.children}</div>
 			</div>
 		</div>
 	);

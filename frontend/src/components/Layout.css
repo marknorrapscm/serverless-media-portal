@@ -24,9 +24,9 @@
     font-family: Nunito, Roboto, sans-serif;
     font-size: 1.15em;
     font-weight: bold;
-    color: #fff;
-    background: #333;
-    height: 56px;
+    color: #363636;
+    background: #fff;
+    height: 54px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -74,12 +74,12 @@
 }
 
 .home-btn > svg {
-    fill: #FFFFFF;
+    fill: #ffffff;
     height: 28px;
 }
 
 .back-btn > svg {
-    fill: #FFFFFF;
+    fill: #ffffff;
     height: 26px;
     width: 23px;
 }
@@ -116,4 +116,15 @@
     .nav-item {
         margin-left: 3em;
     }
+}
+
+/* Fix how Bootstrap handles focused links */
+
+a.bg-dark:focus,
+button.bg-dark:focus {
+    background-color: #1d2124 !important;
+}
+
+.list-group-item-action:focus {
+    color: #FFF !important;
 }
