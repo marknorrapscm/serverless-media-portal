@@ -179,9 +179,9 @@ export default function Upload() {
 
 	return (
 		<Row style={{ padding: "1.75em" }}>
-			<Col lg={6} md={10} sm={12}>
+			<Col lg={7} md={10} sm={12}>
 				<div className="d-flex">
-					<h4>Upload a new video</h4>
+					<h5>Upload a new video</h5>
 					<Button
 						variant="secondary"
 						size="sm"
@@ -196,21 +196,21 @@ export default function Upload() {
 
 				<Form onSubmit={onSubmit} id="upload-form">
 					<Form.Row>
-						<Form.Label column="lg" lg={2}>Video Title:</Form.Label>
+						<Form.Label column lg={3}>Video Title:</Form.Label>
 						<Col>
-							<Form.Control name="title" size="lg" type="text" minLength="1" required />
+							<Form.Control name="title" type="text" minLength="1" required />
 						</Col>
 					</Form.Row>
 
 					<Form.Row>
-						<Form.Label column lg={2}>Taken on:</Form.Label>
+						<Form.Label column lg={3}>Taken on:</Form.Label>
 						<Col>
 							<Form.Control name="date" type="date" required />
 						</Col>
 					</Form.Row>
 
 					<Form.Row>
-						<Form.Label column lg={2}>Duration:</Form.Label>
+						<Form.Label column lg={3}>Duration:</Form.Label>
 						<Col>
 							<Form.Control
 								name="duration"
@@ -223,7 +223,7 @@ export default function Upload() {
 					</Form.Row>
 
 					<Form.Row>
-						<Form.Label column lg={2}>Description:</Form.Label>
+						<Form.Label column lg={3}>Description:</Form.Label>
 						<Col>
 							<Form.Control
 								name="description"
@@ -235,7 +235,7 @@ export default function Upload() {
 					</Form.Row>
 
 					<Form.Row>
-						<Form.Label column lg={2} className="text-nowrap">Select {videoHasBeenUploaded ? "thumbnail" : "video"}:</Form.Label>
+						<Form.Label column lg={3} className="text-nowrap">Select {videoHasBeenUploaded ? "thumbnail" : "video"}:</Form.Label>
 						<Col>
 							{videoUploadInProgress ? (
 								<Spinner animation="grow" size="sm" />
@@ -260,7 +260,7 @@ export default function Upload() {
 					</Form.Row>
 
 					<Form.Row>
-						<Form.Label column lg={2}>Select tags:</Form.Label>
+						<Form.Label column lg={3}>Select tags:</Form.Label>
 						<Col style={{ paddingTop: "10px" }}>
 							{tags.length === 0 ? (
 								<Spinner animation="grow" size="sm" />
