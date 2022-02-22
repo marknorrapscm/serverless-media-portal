@@ -8,6 +8,6 @@ module.exports = {
 };
 
 // Set the environment variables whenever running Jest
-process.env = Object.assign(process.env, {
-	...envVars
-});
+// process.env = Object.assign(process.env, {
+// 	...envVars
+// });
