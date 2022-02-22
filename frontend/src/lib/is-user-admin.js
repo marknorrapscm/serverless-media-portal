@@ -1,7 +1,7 @@
-import { authFetch } from "./auth-fetch";
+import { authGet } from "./auth-fetch";
 
 export default async () => {
-	const res = await authFetch("http://localhost:3001/dev/isUserAnAdmin");
+	const res = await authGet("http://localhost:3001/dev/isUserAnAdmin");
 
 	if (res && res.isUserAnAdmin === true) {
 		return true;

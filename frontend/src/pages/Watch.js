@@ -4,7 +4,7 @@ import { Col, Row } from "react-bootstrap";
 import styled from "styled-components/macro";
 import SpinnerCentered from "../components/SpinnerCentered";
 import { VideoPlayer } from "../components/VideoPlayer";
-import { authFetch } from "../lib/auth-fetch";
+import { authGet } from "../lib/auth-fetch";
 import getDateString from "../lib/get-date-string";
 import { RelatedVideosPane } from "../components/RelatedVideosPane";
 import { CommentPane } from "../components/CommentPane";
@@ -65,7 +65,7 @@ export default function Watch() {
 
 	const getVideo = async () => {
 		if(videoHash) {
-			const res = await authFetch(`http://localhost:3001/dev/getVideo?videoHash=${videoHash}`);
+			const res = await authGet(`http://localhost:3001/dev/getVideo?videoHash=${videoHash}`);
 			if (res.success) {
 				setIsLoading(false);
 				setVideo(res.video);

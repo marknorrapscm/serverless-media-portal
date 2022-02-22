@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Col, Form, Row, Spinner } from "react-bootstrap";
 import { ThumbnailSelector } from "../components/ThumbnailSelector";
-import { authFetch, authPost } from "../lib/auth-fetch";
+import { authGet, authPost } from "../lib/auth-fetch";
 import { useToasts } from "react-toast-notifications";
 
 export default function Upload() {
@@ -21,7 +21,7 @@ export default function Upload() {
 	}, []);
 
 	const loadTags = async () => {
-		const res = await authFetch("http://localhost:3001/dev/listAllTags");
+		const res = await authGet("http://localhost:3001/dev/listAllTags");
 
 		if (res && res.tags) {
 			setTags(res.tags);
@@ -117,7 +117,7 @@ export default function Upload() {
 	};
 
 	const getPresignedUrl = async fileName => {
-		const res = await authFetch(`http://localhost:3001/dev/getPresignedUrlForVideoUpload?fileName=${fileName}`);
+		const res = await authGet(`http://localhost:3001/dev/getPresignedUrlForVideoUpload?fileName=${fileName}`);
 
 		if (res && res.presignedUrl) {
 			return res.presignedUrl;

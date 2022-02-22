@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import SpinnerCentered from "../components/SpinnerCentered";
 import VideoThumbnail from "../components/VideoThumbnail";
-import { authFetch } from "../lib/auth-fetch";
+import { authGet } from "../lib/auth-fetch";
 
 const ThumbnailContainer = styled.div`
 	display: flex;
@@ -20,7 +20,7 @@ export default function Browse() {
 	}, []);
 
 	const loadVideos = async () => {
-		const res = await authFetch("http://localhost:3001/dev/listAllVideosForUser");
+		const res = await authGet("http://localhost:3001/dev/listAllVideosForUser");
 
 		if(res && res.videos) {
 			setVideos(res.videos);
