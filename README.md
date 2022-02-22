@@ -272,7 +272,7 @@ If you click "Home" in the main menu you should see the video listed with the th
 
 ![https://i.imgur.com/KDWLbtN.png](https://i.imgur.com/KDWLbtN.png)
 
-## 3.3 How does tagging work?
+### 3.3 How does tagging work?
 
 Whenever you upload a video, you select tags for that video. Whenever you create a user, you assign tags to that user. Users can only see videos if that video contains a tag that they have been assigned.
 
@@ -280,7 +280,7 @@ The "Admin" tag is a special tag that lets you upload and edit videos and add/de
 
 Users provide the *authentication* to get into the app; tags provide the *authorization* which controls what each user can do within the app. Again, the goal with this is to be as simple as possible.
 
-## 3.4 Building the frontend
+### 3.4 Building the frontend
 
 You should now have the frontend running in your local environment. To create a production build, simply run this in `/frontend/`:
 
@@ -298,7 +298,7 @@ The contents of `/build` are all you need to deploy for your site to work.
 
 I personally run the media portal inside a sub-directory on my website. So, instead of users going to `https://www.mysite.com` and seeing the media portal, they go to `https://www.mysite.com/media`. To achieve this, simply edit the `homepage` value within the frontend's `package.json`. If you want `/media` to be the sub-directory, set it to `"homepage": "/media"` and the frontend will operate under the sub-directory.
 
-## 3.5 Deploying the frontend
+### 3.5 Deploying the frontend
 
 In order to make this useful to people it needs to be deployed to a webhost. Ideally, you'd have your own domain as well - it's not particularly easy telling your grandmother to go to https://XkU8BhnR4.europe.some-random-host.com.
 
