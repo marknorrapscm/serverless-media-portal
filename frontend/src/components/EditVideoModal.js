@@ -1,7 +1,27 @@
-import React from "react";
-import { Button, Col, Form, Modal } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Form, Modal, Spinner } from "react-bootstrap";
+import { authGet } from "../lib/auth-fetch";
 
 export default function EditVideoModal ({ isOpen, setIsOpen, video, onEditFormSubmitted }) {
+	const [isLoadingTags, setIsLoadingTags] = useState(false);
+	const [allTags, setAllTags] = useState([]);
+
+	useEffect(() => {
+		if(isOpen) {
+			loadTags();
+		}
+	}, [isOpen]);
+
+	const loadTags = async () => {
+		setIsLoadingTags(true);
+		const res = await authGet("http://localhost:3001/dev/listAllTags");
+
+		if(res && res.tags) {
+			setAllTags(res.tags.map(x => x.TagName));
+		}
+		setIsLoadingTags(false);
+	};
+
 	const onSubmit = (e) => {
 		e.preventDefault();
 		const formData = getFormData(e.target);
@@ -11,6 +31,7 @@ export default function EditVideoModal ({ isOpen, setIsOpen, video, onEditFormSu
 		newVideo.VideoDate = formData.videoDate;
 		newVideo.ViewCount = formData.viewCount;
 		newVideo.Description = formData.description;
+		newVideo.Tags = getSelectedTags(formData);
 
 		onEditFormSubmitted(newVideo);
 		setIsOpen(false);
@@ -21,6 +42,12 @@ export default function EditVideoModal ({ isOpen, setIsOpen, video, onEditFormSu
 		const data = Object.fromEntries(formData.entries());
 
 		return data;
+	};
+
+	const getSelectedTags = formData => {
+		const selectedTags = Object.keys(formData).filter(key => allTags.includes(key));
+
+		return selectedTags;
 	};
 
 	return (
@@ -59,6 +86,29 @@ export default function EditVideoModal ({ isOpen, setIsOpen, video, onEditFormSu
 						<Form.Label column xs={3}>Description:</Form.Label>
 						<Col>
 							<Form.Control name="description" type="text" defaultValue={video.Description} />
+						</Col>
+					</Form.Row>
+
+					<Form.Row>
+						<Form.Label column xs={3}>Tags:</Form.Label>
+						<Col className="pt-2">
+							{isLoadingTags ? (
+								<Spinner animation="grow" size="sm" />
+							) : (
+								allTags.map(tag => (
+									<Form.Check
+										key={tag}
+										custom
+										inline
+										label={tag}
+										type="checkbox"
+										name={tag}
+										id={tag}
+										value={true}
+										defaultChecked={video.Tags ? video.Tags.includes(tag) : false}
+									/>
+								))
+							)}
 						</Col>
 					</Form.Row>
 
