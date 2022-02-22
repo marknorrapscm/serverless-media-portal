@@ -10,9 +10,9 @@
 }
 
 #sidebar-wrapper {
-    min-width: 16.5em;
-    max-width: 16.5em;
-    margin-left: -16.5em;
+    min-width: 14.5em;
+    max-width: 14.5em;
+    margin-left: -14.5em;
     min-height: 100vh;
     -webkit-transition: margin 0.15s ease-out;
     -moz-transition: margin 0.15s ease-out;
@@ -108,7 +108,7 @@
     }
 
     #wrapper.toggled #sidebar-wrapper {
-        margin-left: -16.5em;
+        margin-left: -14.5em;
     }
 }
 

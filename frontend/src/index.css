@@ -29,3 +29,8 @@ body > iframe[style*="2147483647"]:not([id="webpack-dev-server-client-overlay"])
 	background-color: #fff !important;
 	box-shadow: rgba(53, 64, 82, 0.05) 0px 0px 14px 0px;
 }
+
+/* Make react-toasts appear on top of Bootstrap modal overlay */
+.react-toast-notifications__container {
+	z-index: 9999 !important;
+}
