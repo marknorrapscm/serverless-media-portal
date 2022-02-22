@@ -22,7 +22,7 @@ export async function logUserIn(userHashFromLoginForm = undefined) {
 	}
 }
 
-export async function authFetch(url) {
+export async function authGet(url) {
 	const urlToUse = modifyUrlBasedOnSettings(url);
 	const hash = getHash();
 	const response = await makeRequest(urlToUse, hash, "GET");

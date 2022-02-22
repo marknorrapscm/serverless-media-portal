@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Spinner, Table } from "react-bootstrap";
-import { authFetch } from "../lib/auth-fetch";
+import { authGet } from "../lib/auth-fetch";
 import { useToasts } from "react-toast-notifications";
 import { AddTagModal } from "./AddTagModal";
 
@@ -15,7 +15,7 @@ export default function ManageTagsTable() {
 	}, []);
 
 	const loadTags = async () => {
-		const res = await authFetch("http://localhost:3001/dev/listAllTags");
+		const res = await authGet("http://localhost:3001/dev/listAllTags");
 
 		if (res && res.tags) {
 			setTags(res.tags);
@@ -25,7 +25,7 @@ export default function ManageTagsTable() {
 
 	const onDeleteClicked = async tagName => {
 		setIsLoading(true);
-		const res = await authFetch(`http://localhost:3001/dev/deleteTag?tagName=${tagName}`);
+		const res = await authGet(`http://localhost:3001/dev/deleteTag?tagName=${tagName}`);
 		
 		if(res && res.success) {
 			await loadTags();

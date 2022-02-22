@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Spinner, Table } from "react-bootstrap";
-import { authFetch } from "../lib/auth-fetch";
+import { authGet } from "../lib/auth-fetch";
 import { AddOrEditUserModal } from "../components/AddOrEditUserModal";
 import { useToasts } from "react-toast-notifications";
 import { useNavigate } from "react-router";
@@ -20,7 +20,7 @@ export default function ManageUsersTable() {
 	}, []);
 
 	const loadUsers = async () => {
-		const res = await authFetch("http://localhost:3001/dev/listUsers");
+		const res = await authGet("http://localhost:3001/dev/listUsers");
 
 		if (res && res.users) {
 			setUsers(res.users);
@@ -46,7 +46,7 @@ export default function ManageUsersTable() {
 
 	const deleteUser = async userHash => {
 		setIsLoading(true);
-		const res = await authFetch(`http://localhost:3001/dev/deleteUser?userHash=${userHash}`);
+		const res = await authGet(`http://localhost:3001/dev/deleteUser?userHash=${userHash}`);
 
 		if (res && res.success) {
 			addNotification("User deleted", "success");

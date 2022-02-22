@@ -14,7 +14,8 @@ module.exports = async formData => {
 		Title: formData.Title,
 		ViewCount: formData.ViewCount,
 		VideoDate: formData.VideoDate,
-		Description: formData.Description
+		Description: formData.Description,
+		Tags: formData.Tags
 	});
 
 	await addVideo(newVideoModel);

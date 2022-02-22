@@ -5,7 +5,7 @@ import ManageTagsTable from "../components/ManageTagsTable";
 
 export default function Settings() {
 	return (
-		<Row className="mx-3 mt-4">
+		<Row className="mx-1 mt-4">
 			<Col md={12} lg={8}>
 				<ManageUsersTable />
 			</Col>

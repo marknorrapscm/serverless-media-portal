@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Button, Col, Form, Spinner, Modal } from "react-bootstrap";
-import { authFetch, authPost } from "../lib/auth-fetch";
+import { authGet, authPost } from "../lib/auth-fetch";
 import { useToasts } from "react-toast-notifications";
 import generateUserHash from "../lib/generate-user-hash";
 
 export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
+	const [isLoadingTags, setIsLoadingTags] = useState(false);
 	const [allTags, setAllTags] = useState([]);
 	const { addToast } = useToasts();
 
 	useEffect(() => {
-		loadTags();
-	}, []);
+		if(isOpen) {
+			loadTags();
+		}
+	}, [isOpen]);
 
 	const loadTags = async () => {
-		const res = await authFetch("http://localhost:3001/dev/listAllTags");
+		setIsLoadingTags(true);
+		const res = await authGet("http://localhost:3001/dev/listAllTags");
 
 		if(res && res.tags) {
-			setAllTags(res.tags);
+			setAllTags(res.tags.map(x => x.TagName));
 		}
+		setIsLoadingTags(false);
 	};
 
 	const onSubmit = async e => {
@@ -67,8 +72,7 @@ export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
 	};
 
 	const getSelectedTags = formData => {
-		const tagNames = allTags.map(x => x.TagName);
-		const selectedTags = Object.keys(formData).filter(key => tagNames.includes(key));
+		const selectedTags = Object.keys(formData).filter(key => allTags.includes(key));
 
 		return selectedTags;
 	};
@@ -129,20 +133,20 @@ export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
 					<Form.Row>
 						<Form.Label column xs={3}>Visible Tags:</Form.Label>
 						<Col style={{ paddingTop: "10px" }}>
-							{allTags.length === 0 ? (
+							{isLoadingTags ? (
 								<Spinner animation="grow" size="sm" />
 							) : (
-								allTags.map(x => (
+								allTags.map(tag => (
 									<Form.Check
-										key={x.TagName}
+										key={tag}
 										custom
 										inline
-										label={x.TagName}
+										label={tag}
 										type="checkbox"
-										name={x.TagName}
-										id={x.TagName}
+										name={tag}
+										id={tag}
 										value={true}
-										defaultChecked={user.Tags ? user.Tags.includes(x.TagName) : false}
+										defaultChecked={user.Tags ? user.Tags.includes(tag) : false}
 									/>
 								))
 							)}

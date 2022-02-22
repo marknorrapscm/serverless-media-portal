@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { authFetch } from "../lib/auth-fetch";
+import { authGet } from "../lib/auth-fetch";
 import { Spinner } from "react-bootstrap";
 import RelatedVideoThumbnail from "./RelatedVideoThumbnail";
 
@@ -12,7 +12,7 @@ export function RelatedVideosPane() {
 	}, []);
 
 	const getVideos = async () => {
-		const res = await authFetch("http://localhost:3001/dev/listRandomVideos?count=5");
+		const res = await authGet("http://localhost:3001/dev/listRandomVideos?count=5");
 
 		if (res && res.videos) {
 			setVideos(res.videos);
