@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { authGet } from "../lib/auth-fetch";
 import getPeriodElapsedSince from "../lib/get-period-elapsed-since";
 import useInterval from "../lib/use-interval";
 
@@ -32,7 +31,6 @@ export default function Comment({ commentHash, displayName, commentText, dateCre
 	const [isBeingDeleted, setIsBeingDeleted] = useState(false);
 
 	useEffect(() => {
-		console.log(commentHash);
 		updateTimeSinceCommentWritten();
 	}, []);
 
