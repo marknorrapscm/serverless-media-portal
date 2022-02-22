@@ -10,9 +10,16 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-/*
-* Bootstrap theme
-*/
+/**
+ * until https://github.com/facebook/create-react-app/issues/11771
+ * gets fixed we need to add this to enable hot reloading during
+ * development
+ */
+body > iframe[style*="2147483647"]:not([id="webpack-dev-server-client-overlay"]) {
+	display: none;
+}
+
+/* Modify Bootstrap theme */
 .bg-dark {
 	background-color: #2a2a2a !important;
 	color: #fff;

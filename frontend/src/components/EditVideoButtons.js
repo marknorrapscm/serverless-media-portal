@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Button } from "react-bootstrap";
-import { authFetch, authPost } from "../lib/auth-fetch";
-import isUserAdmin from "../lib/is-user-admin";
+import { authGet, authPost } from "../lib/auth-fetch";
 import VideoContext from "./VideoContext";
 import { useToasts } from "react-toast-notifications";
 import { useNavigate } from "react-router-dom";
 import EditVideoModal from "./EditVideoModal";
 
-export default function EditVideoButtons() {
+export default function EditVideoButtons({ isUserAnAdmin }) {
 	const [displayEditButtons, setDisplayEditButtons] = useState(false);
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const { video, setVideo } = useContext(VideoContext);
@@ -15,17 +14,11 @@ export default function EditVideoButtons() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		checkUsersPrivledge();
-	}, []);
-
-	const checkUsersPrivledge = async () => {
-		if (await isUserAdmin()) {
-			setDisplayEditButtons(true);
-		}
-	};
+		setDisplayEditButtons(isUserAnAdmin);
+	}, [isUserAnAdmin]);
 
 	const onDeleteClicked = async () => {
-		const res = await authFetch(`http://localhost:3001/dev/deleteVideo?videoHash=${video.VideoHash}`);
+		const res = await authGet(`http://localhost:3001/dev/deleteVideo?videoHash=${video.VideoHash}`);
 
 		if (res && res.success) {
 			addNotification("Video deleted", "success");

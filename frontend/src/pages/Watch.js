@@ -10,6 +10,7 @@ import { RelatedVideosPane } from "../components/RelatedVideosPane";
 import { CommentPane } from "../components/CommentPane";
 import EditVideoButtons from "../components/EditVideoButtons";
 import VideoContext from "../components/VideoContext";
+import isUserAdmin from "../lib/is-user-admin";
 
 const VideoMetadataContainer = styled.div`
 	background-color: #FFF;
@@ -57,11 +58,20 @@ export default function Watch() {
 	const [video, setVideo] = useState({});
 	const { videoHash } = useParams();
 	const [isLoading, setIsLoading] = useState(true);
+	const [isUserAnAdmin, setIsUserAnAdmin] = useState(false);
+
+	useEffect(() => {
+		checkUserPrivledgeLevel();
+	}, []);
 
 	useEffect(() => {
 		setIsLoading(true);
 		getVideo();
 	}, [videoHash]);
+
+	const checkUserPrivledgeLevel = async () => {
+		setIsUserAnAdmin(await isUserAdmin());
+	};
 
 	const getVideo = async () => {
 		if(videoHash) {
@@ -98,11 +108,14 @@ export default function Watch() {
 
 								<div className="d-flex justify-content-between align-items-end">
 									<VideoDescription>{video.Description}</VideoDescription>
-									<EditVideoButtons />
+									<EditVideoButtons isUserAnAdmin={isUserAnAdmin} />
 								</div>
 							</VideoMetadataContainer>
 
-							<CommentPane videoHash={videoHash} />
+							<CommentPane 
+								videoHash={videoHash} 
+								isUserAnAdmin={isUserAnAdmin}
+							/>
 						</Col>
 						<Col lg={3} xs={12} className="pl-1">
 							<RelatedVideosPane />
