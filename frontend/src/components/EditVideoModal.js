@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Spinner } from "react-bootstrap";
 import { authGet } from "../lib/auth-fetch";
+import { useToasts } from "react-toast-notifications";
 
 export default function EditVideoModal ({ isOpen, setIsOpen, video, onEditFormSubmitted }) {
 	const [isLoadingTags, setIsLoadingTags] = useState(false);
 	const [allTags, setAllTags] = useState([]);
+	const { addToast } = useToasts();
 
 	useEffect(() => {
 		if(isOpen) {
@@ -33,8 +35,16 @@ export default function EditVideoModal ({ isOpen, setIsOpen, video, onEditFormSu
 		newVideo.Description = formData.description;
 		newVideo.Tags = getSelectedTags(formData);
 
-		onEditFormSubmitted(newVideo);
-		setIsOpen(false);
+		if(newVideo.Tags.length === 0) {
+			addToast("Error: at least one tag must be selected", {
+				appearance: "warning",
+				autoDismiss: true,
+				autoDismissTimeout: 10000
+			});
+		} else {
+			onEditFormSubmitted(newVideo);
+			setIsOpen(false);
+		}
 	};
 
 	const getFormData = form => {
