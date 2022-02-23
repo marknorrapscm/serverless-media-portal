@@ -5,11 +5,13 @@
 	"main": "handler.js",
 	"dependencies": {},
 	"devDependencies": {
-		"aws-sdk": "^2.916.0",
-		"eslint": "^7.27.0",
+		"aws-sdk": "^2.1077.0",
+		"eslint": "^7.32.0",
 		"eslint-config-airbnb-base": "^14.2.1",
-		"eslint-plugin-import": "^2.23.3",
-		"serverless-offline": "^6.9.0",
+		"eslint-plugin-import": "^2.25.4",
+		"jest": "^27.5.1",
+		"serverless-export-env": "^2.1.0",
+		"serverless-offline": "^8.5.0",
 		"serverless-plugin-scripts": "^1.0.2"
 	},
 	"scripts": {

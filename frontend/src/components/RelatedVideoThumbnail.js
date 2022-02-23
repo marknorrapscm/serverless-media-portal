@@ -55,6 +55,8 @@ const ThumbnailImageContainer = styled.div`
     
     img {
         height: 100%;
+		object-fit: contain;
+		max-width: 100%;
     }
 `;
 

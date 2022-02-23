@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logo from "../logo.svg";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Layout.css";
 import { ReactComponent as HouseIcon } from "../images/home.svg";
 import { ReactComponent as ArrowIcon } from "../images/arrow-left.svg";
@@ -15,7 +15,7 @@ export default function Layout(props) {
 	const [isMenuOpen, setIsMenuOpen] = useState(true);
 	const [restrictedLinks, setRestrictedLinks] = useState([]);
 	const [showConfirmSignoutBtn, setShowConfirmSignoutBtn] = useState(false);
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		loadRestrictedLinks();
@@ -56,12 +56,12 @@ export default function Layout(props) {
 
 	return (
 		<div className={`d-flex ${isMenuOpen || "toggled"}`} id="wrapper">
-			<div className="bg-dark border-right" id="sidebar-wrapper">
+			<div className="bg-dark" id="sidebar-wrapper">
 				<div className="sidebar-heading">
 					<img src={logo} alt="logo" />
 					Family Media Portal
 				</div>
-				<div className="list-group list-group-flush">
+				<div className="list-group list-group-flush pt-1">
 					<Link to="/" className="list-group-item list-group-item-action bg-dark">
 						Home
 					</Link>
@@ -70,9 +70,9 @@ export default function Layout(props) {
 			</div>
 
 			<div id="page-content-wrapper">
-				<nav className="navbar navbar-expand-lg navbar-light border-bottom" style={{ justifyContent: "left" }}>
+				<nav className="navbar navbar-expand-lg navbar-light border-bottom" style={{ justifyContent: "left", boxShadow: "none" }}>
 					<div>
-						<button className="btn btn-info back-btn" onClick={() => history.goBack()}>
+						<button className="btn btn-info back-btn" onClick={() => navigate(-1)}>
 							<ArrowIcon />
 						</button>
 
@@ -115,7 +115,7 @@ export default function Layout(props) {
 					</div>
 				</nav>
 
-				<div className="container-fluid pl-0 pr-0">{props.children}</div>
+				<div className="container-fluid">{props.children}</div>
 			</div>
 		</div>
 	);

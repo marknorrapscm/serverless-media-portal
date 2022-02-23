@@ -1,35 +1,28 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Button } from "react-bootstrap";
-import { authFetch, authPost } from "../lib/auth-fetch";
-import isUserAdmin from "../lib/is-user-admin";
+import { authGet, authPost } from "../lib/auth-fetch";
 import VideoContext from "./VideoContext";
 import { useToasts } from "react-toast-notifications";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import EditVideoModal from "./EditVideoModal";
 
-export default function EditVideoButtons() {
+export default function EditVideoButtons({ isUserAnAdmin }) {
 	const [displayEditButtons, setDisplayEditButtons] = useState(false);
 	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 	const { video, setVideo } = useContext(VideoContext);
 	const { addToast } = useToasts();
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	useEffect(() => {
-		checkUsersPrivledge();
-	}, []);
-
-	const checkUsersPrivledge = async () => {
-		if (await isUserAdmin()) {
-			setDisplayEditButtons(true);
-		}
-	};
+		setDisplayEditButtons(isUserAnAdmin);
+	}, [isUserAnAdmin]);
 
 	const onDeleteClicked = async () => {
-		const res = await authFetch(`http://localhost:3001/dev/deleteVideo?videoHash=${video.VideoHash}`);
+		const res = await authGet(`http://localhost:3001/dev/deleteVideo?videoHash=${video.VideoHash}`);
 
 		if (res && res.success) {
 			addNotification("Video deleted", "success");
-			history.push("/");
+			navigate("/");
 		} else {
 			addNotification("Error deleting video", "error");
 		}
@@ -59,7 +52,7 @@ export default function EditVideoButtons() {
 	return (
 		!displayEditButtons || (
 			<>
-				<div>
+				<div className="text-nowrap">
 					<Button
 						variant="warning"
 						size="sm"
@@ -72,7 +65,6 @@ export default function EditVideoButtons() {
 					<Button
 						variant="danger"
 						size="sm"
-						className="mr-2"
 						onClick={() => {
 							if (window.confirm("Are you sure you want to delete this video?")) {
 								onDeleteClicked();

@@ -1,7 +1,8 @@
 module.exports = {
 	"env": {
 		"es2021": true,
-		"node": true
+		"node": true,
+		"jest": true
 	},
 	"extends": [
 		"eslint:recommended",
@@ -20,6 +21,7 @@ module.exports = {
 		"quote-props": "off",
 		"no-use-before-define": "off",
 		"arrow-parens": ["error", "as-needed"],
-		"prefer-template": "error"
+		"prefer-template": "error",
+		"no-console": "off"
 	}
 };

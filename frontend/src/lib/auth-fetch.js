@@ -22,7 +22,7 @@ export async function logUserIn(userHashFromLoginForm = undefined) {
 	}
 }
 
-export async function authFetch(url) {
+export async function authGet(url) {
 	const urlToUse = modifyUrlBasedOnSettings(url);
 	const hash = getHash();
 	const response = await makeRequest(urlToUse, hash, "GET");
@@ -43,7 +43,7 @@ const performLogin = async (userHash) => {
 	const urlToUse = modifyUrlBasedOnSettings("http://localhost:3001/dev/handshake");
 	const response = await makeRequest(urlToUse, userHash, "GET");
 
-	if (response && response.message === "Success") {
+	if (response && response.success === true) {
 		return true;
 	} else {
 		return false;

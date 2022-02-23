@@ -5,16 +5,17 @@
             "type": "node",
             "request": "launch",
             "name": "Serverless debug",
+            // Need to install serverless locally to use this workspace (`npm install serverless --save-dev`)
             "program": "${workspaceRoot}/node_modules/serverless/bin/serverless",
             "args": [
                 "invoke",
                 "local",
                 "-f",
-                "authorizer",
-                "--data",
-                "$2a$10$yGsdhh0HUIWMoECia9IcLewWvLrfhTEiLVD4AGhMrkhZkLYVMlkz2",
+                "deleteCommentFromVideo",
                 "-e",
-                "NODE_ENV=dev"
+                "NODE_ENV=dev",
+                "--data",
+                "{\"queryStringParameters\":{\"videoHash\":\"LYRA5anE6FK\",\"commentHash\":\"ra7BuzDSFjP\"}}"
             ]
         }
     ]

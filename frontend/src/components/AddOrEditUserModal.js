@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { Button, Col, Form, Spinner, Modal } from "react-bootstrap";
-import { authFetch, authPost } from "../lib/auth-fetch";
+import { authGet, authPost } from "../lib/auth-fetch";
 import { useToasts } from "react-toast-notifications";
 import generateUserHash from "../lib/generate-user-hash";
 
 export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
+	const [isLoadingTags, setIsLoadingTags] = useState(false);
 	const [allTags, setAllTags] = useState([]);
 	const { addToast } = useToasts();
 
 	useEffect(() => {
-		loadTags();
-	}, []);
+		if(isOpen) {
+			loadTags();
+		}
+	}, [isOpen]);
 
 	const loadTags = async () => {
-		const res = await authFetch("http://localhost:3001/dev/getAllTags");
+		setIsLoadingTags(true);
+		const res = await authGet("http://localhost:3001/dev/listAllTags");
 
 		if(res && res.tags) {
-			setAllTags(res.tags);
+			setAllTags(res.tags.map(x => x.TagName));
 		}
+		setIsLoadingTags(false);
 	};
 
 	const onSubmit = async e => {
@@ -27,7 +32,7 @@ export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
 		const uploadResult = await performFormUpload(formData);
 
 		if (uploadResult.success) {
-			close();
+			close(true);
 
 			const msg = editUserMode
 				? "User updated"
@@ -43,10 +48,9 @@ export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
 		const formData = Object.fromEntries(new FormData(form).entries());
 		
 		const dataObj = {
-			userHash: getUserHash(formData),
-			displayName: formData.displayName,
-			dateOfBirth: formData.dateOfBirth,
-			tags: getSelectedTags(formData)
+			UserHash: getUserHash(formData),
+			DisplayName: formData.displayName,
+			Tags: getSelectedTags(formData)
 		};
 
 		return dataObj;
@@ -63,13 +67,12 @@ export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
 
 	const getUploadUrl = () => {
 		return editUserMode
-			? "http://localhost:3001/dev/updateUser" 
+			? "http://localhost:3001/dev/editUser" 
 			: "http://localhost:3001/dev/addUser";
 	};
 
 	const getSelectedTags = formData => {
-		const tagNames = allTags.map(x => x.TagName);
-		const selectedTags = Object.keys(formData).filter(key => tagNames.includes(key));
+		const selectedTags = Object.keys(formData).filter(key => allTags.includes(key));
 
 		return selectedTags;
 	};
@@ -109,41 +112,41 @@ export function AddOrEditUserModal({ user, isOpen, close, editUserMode }) {
 					<Form.Row>
 						<Form.Label column xs={3}>Name:</Form.Label>
 						<Col>
-							<Form.Control name="displayName" type="text" defaultValue={user.DisplayName} required />
+							<Form.Control name="displayName" type="text" defaultValue={user.DisplayName} maxLength="75" required />
 						</Col>
 					</Form.Row>
 
 					<Form.Row>
 						<Form.Label column xs={3}>Date of Birth:</Form.Label>
 						<Col>
-							<Form.Control name="dateOfBirth" type="date" disabled={editUserMode} />
+							<Form.Control name="dateOfBirth" type="date" disabled={editUserMode} required={!editUserMode} />
 						</Col>
 					</Form.Row>
 
 					<Form.Row>
 						<Form.Label column xs={3}>Password:</Form.Label>
 						<Col>
-							<Form.Control name="password" type="password" disabled={editUserMode} />
+							<Form.Control name="password" type="password" disabled={editUserMode} required={!editUserMode} />
 						</Col>
 					</Form.Row>
 
 					<Form.Row>
 						<Form.Label column xs={3}>Visible Tags:</Form.Label>
 						<Col style={{ paddingTop: "10px" }}>
-							{allTags.length === 0 ? (
+							{isLoadingTags ? (
 								<Spinner animation="grow" size="sm" />
 							) : (
-								allTags.map(x => (
+								allTags.map(tag => (
 									<Form.Check
-										key={x.TagName}
+										key={tag}
 										custom
 										inline
-										label={x.TagName}
+										label={tag}
 										type="checkbox"
-										name={x.TagName}
-										id={x.TagName}
+										name={tag}
+										id={tag}
 										value={true}
-										defaultChecked={user.Tags ? user.Tags.includes(x.TagName) : false}
+										defaultChecked={user.Tags ? user.Tags.includes(tag) : false}
 									/>
 								))
 							)}

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { authFetch } from "../lib/auth-fetch";
+import { authGet } from "../lib/auth-fetch";
 import VideoContext from "./VideoContext";
 import styles from "./VideoPlayer.module.css";
 
@@ -9,7 +9,7 @@ export function VideoPlayer() {
 
 	const addViewCountToVideo = async () => {
 		if(!hasViewCountBeenUpdated) {
-			await authFetch(`http://localhost:3001/dev/addViewToVideo?videoHash=${video.VideoHash}`);
+			await authGet(`http://localhost:3001/dev/addViewToVideo?videoHash=${video.VideoHash}`);
 			setHasViewCountBeenUpdated(true);
 		}
 	};
