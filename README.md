@@ -26,7 +26,7 @@ This repo contains the full stack for creating a private, password-protected web
 * User accounts with simple authentication that's easy for older family members to use
 * Simple permissions system to control who can view what
 * Full mobile support
-* Works within AWS's free tier (or is at least very cheap; I'll talk more about that [here](#aws-costs))
+* Works within AWS's free tier (or is at least very cheap; I'll talk more about that [here](https://github.com/marknorrapscm/serverless-media-portal/blob/master/docs/technical-details.md#aws-costs))
 * [Here's a few screenshots too](https://imgur.com/a/gje6XMa)
 
 #### Table of contents
@@ -105,7 +105,7 @@ Nothing more needs to be entered; click next until the account is created. Whene
 
 ![https://i.imgur.com/HTMqfgn.png](https://i.imgur.com/HTMqfgn.png)
 
-You will never be able to view the secret once this window is closed so keep it open for the next stage. If you do close it, you'll have to [create a new access key](https://www.youtube.com/watch?v=JvtmmS9_tfU). Keep them private and never commit them to source control.
+You will never be able to view the secret once this window is closed so keep it open for the next stage. If you do close it, you'll have to [create a new access key](https://www.youtube.com/watch?v=vucdm8BWFu0). Keep them private and never commit them to source control.
 
 ### 1.3 Add IAM user to Serverless
 
