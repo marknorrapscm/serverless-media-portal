@@ -413,7 +413,7 @@ functions:
             resultTtlInSeconds: 0
   thumbnailMaker:
     handler: src/handlers/misc.thumbnailMaker
-    memorySize: 5120
+    memorySize: 3008
     timeout: 60
     maximumEventAge: 60
     maximumRetryAttempts: 0
